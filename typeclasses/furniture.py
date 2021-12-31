@@ -1,5 +1,6 @@
 from typeclasses.objects import Object
 from evennia.utils import evmenu
+from evennia.utils.utils import list_to_string
 from evennia import default_cmds
 from evennia import create_object
 from commands.furniturecommands import FurnitureCmdSet
@@ -27,6 +28,25 @@ class Container(Object):
         super().at_object_creation();
         self.db.container = True
         self.db.prep = "in"
+        self.db.open = True
+
+    def return_appearance(self, looker):
+        text = f"|c{self.get_display_name(looker)}|n"
+
+        if self.db.desc:
+            text += "\n"+self.db.desc
+
+        if self.db.open:
+            text += "\nInside the chest you see: "
+            items = []
+            for content in self.contents:
+                items.append(content.get_display_name(looker))
+
+            text += list_to_string(items)
+        else:
+            text += f"\nThe {self} is closed."
+
+        return text
 
 class Bar(Furniture):
     def at_object_creation(self):

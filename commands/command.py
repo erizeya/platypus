@@ -806,8 +806,8 @@ class CmdOpen(BaseCommand):
         if not object:
             return
 
-        if not obj.db.door:
-            caller.msg("It doesn't look like the {obj} is something you can open.")
+        if not (obj.db.door or obj.db.container):
+            caller.msg(f"It doesn't look like the {obj} is something you can open.")
             return
 
         if(obj.db.open):
@@ -817,8 +817,9 @@ class CmdOpen(BaseCommand):
         #Open the door
         obj.db.open = True
 
-        #Open the other side too
-        obj.db.pair.db.open = True
+        #Open the other side too if acting on a door
+        if obj.db.door:
+            obj.db.pair.db.open = True
 
         caller.msg(f"You open the {obj}")
         return
@@ -841,17 +842,19 @@ class CmdClose(BaseCommand):
         )
         if not object:
             return
-        if not obj.db.door:
-            caller.msg("It doesn't look like the {obj} is something you can close.")
+        if not (obj.db.door or obj.db.container):
+            caller.msg(f"It doesn't look like the {obj} is something you can close.")
             return
         if(not obj.db.open):
             caller.msg(f"The {obj} is already closed.")
             return
-        #Close the door
+
+        #Close the door or container
         obj.db.open = False
 
-        #Close the other side too
-        obj.db.pair.db.open = False
+        #Close the other side too if this is a door
+        if obj.db.door:
+            obj.db.pair.db.open = False
 
         caller.msg(f"You close the {obj}")
         return
