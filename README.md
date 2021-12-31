@@ -30,10 +30,10 @@ Platypus is a MOO database being designed to follow in the footsteps of the Ghos
 `hold[-left/-right] [first/second/etc] <item>`
 #### General
 `wear <item>`  
-Wear a specific item of clothing. Does not support multiples.
+Wear a specific item of clothing. If more than one item matches the <item> argument a "count" such as "first" or "2nd" can be used to specify which item should be held.
 
 `remove <item>`  
-Removes a worn piece of clothing. Clothing which has other clothing over it cannot be removed.
+Removes a worn piece of clothing. Clothing which has other clothing over it cannot be removed. If more than one item matches the <item> argument a "count" such as "first" or "2nd" can be used to specify which item should be held.
 
 `i[nv[entory]]`  
 Displays the character's inventory with designators for worn objects and held objects.
@@ -119,5 +119,4 @@ Pairs one to another. Should only be used on exits that connect to one another. 
 - [ ] Doors
     - [ ] Automatically create door pairing when generating rooms/exits.
 - [ ] Add multiple support for...
-   - [ ] `wear`
    - [ ] `put`

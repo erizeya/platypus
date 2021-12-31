@@ -20,26 +20,52 @@ class CmdWear(BaseCommand):
 
     def func(self):
         caller = self.caller
+        target_obj = self.args.strip()
+        count = None
 
         if not self.args:
             caller.msg("What do you want to wear?")
         else:
-            target_obj = caller.search(self.args)
+            #Detect if we're looking for multiples
+            target_obj = target_obj.split(" ")
+            if is_valid_cardinal(target_obj[0]):
+                count = cardinal_to_index(target_obj[0])
+                del target_obj[0]
+                target_obj = " ".join(target_obj)
+            else:
+                target_obj = " ".join(target_obj)
+
+            obj = caller.search(
+                target_obj,
+                location=caller,
+                quiet=True,
+            )
+
+            if len(obj) == 0:
+                caller.msg(f"You aren't carrying {self.args.strip()}")
+                return
+            elif len(obj) > 1 and count is None:
+                print_cardinal_list(f"Which {target_obj}?", obj, caller)
+                return
+            elif len(obj) > 1 and not count is None:
+                obj = obj[count]
+            else:
+                obj = obj[0]
 
             #Check if the object is wearable
-            if not target_obj.db.wearable:
-                caller.msg(f"How are you expecting to wear your {target_obj.name}?")
+            if not obj.db.wearable:
+                caller.msg(f"How are you expecting to wear your {obj.name}?")
 
             #Check if the object is already being worn
-            elif target_obj.db.wearing:
-                caller.msg(f"You are already wearing your {target_obj.name}")
+            elif obj.db.wearing:
+                caller.msg(f"You are already wearing your {obj.name}")
 
             #If checks pass, equip item
             else:
-                caller.msg("You put on your %s" % target_obj.name)
-                caller.location.msg_contents(genderize(f"{caller.name} puts on %p {target_obj.name}",caller.db.gender),exclude=caller)
-                target_obj.db.wearing = True
-                caller.db.worn[target_obj.db.coverage].append(target_obj)
+                caller.msg("You put on your %s" % obj.name)
+                caller.location.msg_contents(genderize(f"{caller.name} puts on %p {obj.name}",caller.db.gender),exclude=caller)
+                obj.db.wearing = True
+                caller.db.worn[obj.db.coverage].append(obj)
 
 # Remove a wearable object
 # 
@@ -55,26 +81,52 @@ class CmdRemove(BaseCommand):
 
     def func(self):
         caller = self.caller
+        target_obj = self.args.strip()
+        count = None
 
         if not self.args:
             caller.msg("What do you want to remove?")
         else:
-            target_obj = caller.search(self.args)
+            #Detect if we're looking for multiples
+            target_obj = target_obj.split(" ")
+            if is_valid_cardinal(target_obj[0]):
+                count = cardinal_to_index(target_obj[0])
+                del target_obj[0]
+                target_obj = " ".join(target_obj)
+            else:
+                target_obj = " ".join(target_obj)
+
+            obj = caller.search(
+                target_obj,
+                location=caller,
+                quiet=True,
+            )
+
+            if len(obj) == 0:
+                caller.msg(f"You aren't carrying {self.args.strip()}")
+                return
+            elif len(obj) > 1 and count is None:
+                print_cardinal_list(f"Which {target_obj}?", obj, caller)
+                return
+            elif len(obj) > 1 and not count is None:
+                obj = obj[count]
+            else:
+                obj = obj[0]
 
             #Check if the object is worn
-            if not target_obj.db.wearing:
-                caller.msg("You are not wearing your %s." % target_obj.name)
+            if not obj.db.wearing:
+                caller.msg("You are not wearing your %s." % obj.name)
 
             #If checks pass, equip item
             else:
                 #Make sure nothing is over the item
-                if caller.db.worn[target_obj.db.coverage][-1].id != target_obj.id:
-                    caller.msg(f"You are wearing something over your {target_obj.name}.")
+                if caller.db.worn[obj.db.coverage][-1].id != obj.id:
+                    caller.msg(f"You are wearing something over your {obj.name}.")
                 else:
-                    caller.msg(f"You take off on your {target_obj.name}.")
-                    caller.location.msg_contents(f"{caller.name} takes off their {target_obj.name}.",exclude=caller)
-                    target_obj.db.wearing = False
-                    caller.db.worn[target_obj.db.coverage].pop()
+                    caller.msg(f"You take off on your {obj.name}.")
+                    caller.location.msg_contents(f"{caller.name} takes off their {obj.name}.",exclude=caller)
+                    obj.db.wearing = False
+                    caller.db.worn[obj.db.coverage].pop()
 
 # View the contents of your inventory.
 # Usage:
