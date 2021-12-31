@@ -120,3 +120,5 @@ Pairs one to another. Should only be used on exits that connect to one another. 
     - [ ] Automatically create door pairing when generating rooms/exits.
 - [ ] Add multiple support for...
    - [ ] `put`
+- [ ] Normalize eat/drink commands to format `eat/drink <item>`
+- [ ] Normalize !furniture commands to format `!furniture <item> <sub command> <input>` 
