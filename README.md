@@ -1,40 +1,123 @@
-# Welcome to Evennia!
+# Platypus
+Platypus is a MOO database being designed to follow in the footsteps of the GhostCore database for LambdaMOO which is the database upon which two notable Cyberpunk MOOs: Cybersphere and Sindome are based upon. 
 
-This is your game directory, set up to let you start with
-your new game right away. An overview of this directory is found here:
-https://github.com/evennia/evennia/wiki/Directory-Overview#the-game-directory
+## Currently Implemented Features
 
-You can delete this readme file when you've read it and you can
-re-arrange things in this game-directory to suit your own sense of
-organisation (the only exception is the directory structure of the
-`server/` directory, which Evennia expects). If you change the structure
-you must however also edit/add to your settings file to tell Evennia
-where to look for things.
+* Chat
+  * `to` command for directed conversation.
+* Clothing
+  * Per-body part description (nakeds).
+  * Layerable clothing that hides nakeds.
+* Pronoun substitution (%s, %o, %p, %q, and %r) in character descriptions, clothing descriptions, and automatic messages.
+* Furniture
+  * Static furniture such as signs, statues, etc.
+  * Interactable furniture (sit, lay, stand) which integrates into room descriptions
+  * Vending furniture which can dispense items to players.
+  * Containers which can hold items.
+* Consumables
+    * Food and drink which are "finished" and deleted after a certain number of uses. Food and drink have message for first bite, taste, subsequent bites, and final bite.
+* NPCs
+  * NPCs can listen to conversations in the surrounding room. 
+  * NPCs can respond when directly addressed via `to`
+* Items
+  * Character/NPC hands. NPCs and characters can hold items in their left and rigth hands.
+* Exits
+ * When `look`ing at an exit the description of the connected room will be shown.
+ * Exits configured as doors can be opened and closed.
 
-Your game's main configuration file is found in
-`server/conf/settings.py` (but you don't need to change it to get
-started). If you just created this directory (which means you'll already
-have a `virtualenv` running if you followed the default instructions),
-`cd` to this directory then initialize a new database using
+## Command Documentation
+### IC Commands
+`hold[-left/-right] [first/second/etc] <item>`
+#### General
+`wear <item>`  
+Wear a specific item of clothing. Does not support multiples.
 
-    evennia migrate
+`remove <item>`  
+Removes a worn piece of clothing. Clothing which has other clothing over it cannot be removed.
 
-To start the server, stand in this directory and run
+`i[nv[entory]]`  
+Displays the character's inventory with designators for worn objects and held objects.
 
-    evennia start
+`sit[ [on/at] furniture]`  
+Causes a character to sit on a piece of furniture or down on the ground.
 
-This will start the server, logging output to the console. Make
-sure to create a superuser when asked. By default you can now connect
-to your new game using a MUD client on `localhost`, port `4000`.  You can
-also log into the web client by pointing a browser to
-`http://localhost:4001`.
+`stand`  
+Rise from a piece of furniture
 
-# Getting started
+`to <character> <message>`  
+Directs a message to a specific character or NPC.
 
-From here on you might want to look at one of the beginner tutorials:
-http://github.com/evennia/evennia/wiki/Tutorials.
+`hold [count] <item>`  
+Hold an item in your inventory in an open hand. If more than one item matches the <item> argument a "count" such as "first" or "2nd" can be used to specify which item should be held.
 
-Evennia's documentation is here:
-https://github.com/evennia/evennia/wiki.
+`hold-left/hold-right [count] <item>`  
+Hold an item in your inventory in a specific hand. If more than one item matches the <item> argument a "count" such as "first" or "2nd" can be used to specify which item should be held.
 
-Enjoy!
+`lower [count] <item>`  
+Lower a held item back into your inventory. If more than one item matches the <item> argument a "count" such as "first" or "2nd" can be used to specify which item should be held.
+
+`get/take/grab [count] item[ from <container>]`  
+Take an item from the current room, or from a container in that room. If more than one item matches the <item> argument a "count" such as "first" or "2nd" can be used to specify which item should be held.
+
+`put item[ from <container>]`  
+Put a held item into a container. Does not support multiples.
+
+`drop [count] item`  
+Drop a held item onto the ground.  If more than one item matches the <item> argument a "count" such as "first" or "2nd" can be used to specify which item should be held.
+
+`open <exit>`  
+Open an exit which is marked as a door.
+
+`close <exit>`
+Close an exit which is marked as a door.
+
+#### Consumables
+`eat`  
+Consume a currently held food item. Does not support multiples.
+
+`drink`  
+Consume a currenty held drink item Does not support multiples.
+
+### OOC Commands
+`@lp`  
+Changes your character's "look_place" message, the message which is displayed in a room description.  
+**Example**: `@lp is leaning against one wall.` would lead to the room desc containing "Character is leaning against one wall." when other players enter or `look` at room that your character is in.
+
+`@naked[s]`  
+Displays all descriptions set for nude body areas. 
+
+`@naked[s] <location> = <desc>`  
+Sets the description for a body location to match the provided text.
+
+`@pronouns`  
+Set the pronouns used by your character. Currently the following pronoun sets are supported: feminine (she/her), masucline (he/him), and spivak (e, em)
+
+### Admin/Builder Commands
+`!furniture position <position string>`  
+Configures the position string of a piece of furniture when displayed in a room description.  
+**Example**: `!furniture position sofa attached to the ceiling` would lead to the room desc containing "A sofa is attached to the ceiling".
+
+`!furniture occupant_post <pose string>`  
+Configures the pose string of a piece of furniture with occupants displayed in a room description.  
+**Example**: `!furniture occupant_pose sofa sitting on the` would lead to the room desc containing "A, B, and C are sitting on the sofa attached to the ceiling".
+
+`!pair <first exit> <second exit>`  
+Pairs one to another. Should only be used on exits that connect to one another. The purpose of linking doors is to ensure that when one door opens or closes, the other half of it (in the connecting room) does as well.
+
+
+## Known Bugs
+* Puppeted NPCs disappear from the room they occupy when the puppeting finishes.
+
+## Todo List
+- [ ] Normalize commands:
+    - [ ] `bare` commands for in-character actions
+    - [ ] `@at-sign` commands for OOC actions
+    - [ ] `!exclamation` commands for admin commands
+- [ ] Currency
+- [ ] Bar Tender NPC
+- [ ] Code Lock
+- [ ] Doors
+    - [ ] Automatically create door pairing when generating rooms/exits.
+- [ ] Add multiple support for...
+   - [ ] `wear`
+   - [ ] `put`
