@@ -33,6 +33,7 @@ from commands.command import CmdDrop
 from commands.command import CmdOpen
 from commands.command import CmdClose
 from commands.command import CmdPair
+from commands.command import CmdLink
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -70,6 +71,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdOpen())
         self.add(CmdClose())
         self.add(CmdPair())
+        self.add(CmdLink())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):

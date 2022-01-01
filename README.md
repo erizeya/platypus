@@ -104,6 +104,9 @@ Configures the pose string of a piece of furniture with occupants displayed in a
 `!pair <first exit> <second exit>`  
 Pairs one to another. Should only be used on exits that connect to one another. The purpose of linking doors is to ensure that when one door opens or closes, the other half of it (in the connecting room) does as well.
 
+`!link <NPC> <Bar>`  
+Links a bartender NPC to the bar. When linked to a bar an NPC may serve the food and drink items available through the linked bar.
+
 
 ## Known Bugs
 * Puppeted NPCs disappear from the room they occupy when the puppeting finishes.
@@ -114,11 +117,12 @@ Pairs one to another. Should only be used on exits that connect to one another. 
     - [ ] `@at-sign` commands for OOC actions
     - [ ] `!exclamation` commands for admin commands
 - [ ] Currency
-- [ ] Bar Tender NPC
+    - [ ] Bar tender must take money.
 - [ ] Code Lock
 - [ ] Doors
     - [ ] Automatically create door pairing when generating rooms/exits.
 - [ ] Add multiple support for...
    - [ ] `put`
+- [ ] Add permissions to bars so that only approved characters/npcs can use it.
 - [ ] Normalize eat/drink commands to format `eat/drink <item>`
 - [ ] Normalize !furniture commands to format `!furniture <item> <sub command> <input>` 

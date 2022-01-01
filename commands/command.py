@@ -3,6 +3,8 @@ from evennia.utils import utils, evtable
 from evennia.utils.search import search_object
 from custom import cardinal_to_index, is_valid_cardinal, print_cardinal_list
 from custom import genderize
+from typeclasses.npc import Npc
+from typeclasses.furniture import Bar
 
 class Command(BaseCommand):
     pass
@@ -887,3 +889,36 @@ class CmdPair(BaseCommand):
 
         obj.db.pair = link 
         link.db.pair = obj
+
+class CmdLink(BaseCommand):
+
+    key = "!link"
+    locks = "cmd:all()"
+
+    def func(self):
+        caller = self.caller
+        arg_list = self.args.strip().split(" ") 
+        target_obj = arg_list[0]
+        target_link = arg_list[1]
+        help_str = "Usage !link <NPC> <Bar>"
+
+        obj = caller.search(
+            target_obj
+        )
+
+        link = search_object(
+            target_link,
+            exact = True
+        )[0]
+
+        if not type(obj) is Npc:
+            caller.msg(f"First argument must be an NPC\n{help_str}")
+            return
+
+        if not type(link) is Bar:
+            caller.msg(f"Second argument must be an NPC\n{help_str}")
+            return
+
+        obj.db.link = link
+
+        caller.msg(f"Linked {obj} to {link}")
