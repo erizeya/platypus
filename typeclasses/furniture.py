@@ -39,12 +39,15 @@ class Container(Furniture):
             text += "\n"+self.db.desc
 
         if self.db.open:
-            text += "\nInside the chest you see: "
-            items = []
-            for content in self.contents:
-                items.append(content.get_display_name(looker))
+            if not self.contents:
+                text += f"\nThe {self} is empty."
+            else:
+                text += f"\nInside the {self} you see: "
+                items = []
+                for content in self.contents:
+                    items.append(content.get_display_name(looker))
 
-            text += list_to_string(items)
+                text += list_to_string(items)
         else:
             text += f"\nThe {self} is closed."
 
