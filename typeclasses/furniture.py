@@ -23,9 +23,11 @@ class Furniture(Object):
         self.db.occupants = []
         self.db.container = False
 
-class Container(Object):
+class Container(Furniture):
     def at_object_creation(self):
         super().at_object_creation();
+        self.db.seating = False
+        self.db.desc = "This is a furniture container."
         self.db.container = True
         self.db.prep = "in"
         self.db.open = True
