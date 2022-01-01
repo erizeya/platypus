@@ -42,7 +42,7 @@ class Exit(DefaultExit):
         self.db.desc = ""
 
     def at_traverse(self, traveller, target_loc):
-        if not self.db.open:
+        if not self.db.open and self.db.open is False:
             traveller.msg(f"{self} is closed.")
             return
         else:
