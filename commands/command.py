@@ -14,6 +14,8 @@ class Command(BaseCommand):
 # Usage:
 #  wear [object]
 #
+# Supports multiples
+#
 class CmdWear(BaseCommand):
     key = "wear"
     aliases = []
@@ -28,32 +30,9 @@ class CmdWear(BaseCommand):
         if not self.args:
             caller.msg("What do you want to wear?")
         else:
-            #Detect if we're looking for multiples
-            target_obj = target_obj.split(" ")
-            if is_valid_cardinal(target_obj[0]):
-                count = cardinal_to_index(target_obj[0])
-                del target_obj[0]
-                target_obj = " ".join(target_obj)
-            else:
-                target_obj = " ".join(target_obj)
-
-            obj = caller.search(
-                target_obj,
-                location=caller,
-                quiet=True,
-            )
-
-            if len(obj) == 0:
-                caller.msg(f"You aren't carrying {self.args.strip()}")
+            obj = caller.multiple_search(target_obj)
+            if not obj:
                 return
-            elif len(obj) > 1 and count is None:
-                print_cardinal_list(f"Which {target_obj}?", obj, caller)
-                return
-            elif len(obj) > 1 and not count is None:
-                obj = obj[count]
-            else:
-                obj = obj[0]
-
             #Check if the object is wearable
             if not obj.db.wearable:
                 caller.msg(f"How are you expecting to wear your {obj.name}?")
@@ -74,6 +53,8 @@ class CmdWear(BaseCommand):
 # Usage:
 #   remove [item]
 #
+# Supports multiples
+#
 class CmdRemove(BaseCommand):
 
     key = "remove"
@@ -89,31 +70,10 @@ class CmdRemove(BaseCommand):
         if not self.args:
             caller.msg("What do you want to remove?")
         else:
-            #Detect if we're looking for multiples
-            target_obj = target_obj.split(" ")
-            if is_valid_cardinal(target_obj[0]):
-                count = cardinal_to_index(target_obj[0])
-                del target_obj[0]
-                target_obj = " ".join(target_obj)
-            else:
-                target_obj = " ".join(target_obj)
 
-            obj = caller.search(
-                target_obj,
-                location=caller,
-                quiet=True,
-            )
-
-            if len(obj) == 0:
-                caller.msg(f"You aren't carrying {self.args.strip()}")
+            obj = caller.multiple_search(target_obj)
+            if not obj:
                 return
-            elif len(obj) > 1 and count is None:
-                print_cardinal_list(f"Which {target_obj}?", obj, caller)
-                return
-            elif len(obj) > 1 and not count is None:
-                obj = obj[count]
-            else:
-                obj = obj[0]
 
             #Check if the object is worn
             if not obj.db.wearing:
@@ -182,6 +142,9 @@ class CmdInventory(BaseCommand):
 #
 # Usage:
 #   sit[ [on/at] <furniture>]
+#
+# TODO:
+#   multiple support
 #
 class CmdSit(BaseCommand):
     key = "sit"
@@ -371,33 +334,8 @@ class CmdHold(BaseCommand):
             target_hand = "right"
             target_obj = " ".join(arg_list[1:])
     
-        #Detect if we're looking for multiple
-        target_obj = target_obj.split(" ")
-        if is_valid_cardinal(target_obj[0]):
-            count = cardinal_to_index(target_obj[0])
-            del target_obj[0]
-            target_obj = " ".join(target_obj)
-        else:
-            target_obj = " ".join(target_obj)
-        
-        obj = caller.search(
-            target_obj,
-            location=caller,
-            nofound_string=f"You aren't carrying {self.args.strip()}",
-            quiet=True,
-        )
-
-        if len(obj) == 0: 
-            caller.msg(f"You aren't carrying {self.args.strip()}")
-            return
-        elif len(obj) > 1 and count is None:
-            print_cardinal_list(f"Which {target_obj}?", obj, caller)
-            return
-        elif len(obj) > 1 and not count is None:
-            obj = obj[count]
-        else:
-            obj = obj[0]
-
+        #Search for object
+        obj = caller.multiple_search(target_obj)
         if not obj:
             return
 
@@ -449,55 +387,25 @@ class CmdLower(BaseCommand):
     def func(self):
         caller = self.caller
         target_obj = self.args.strip()
-        count = None
         if not self.args:
             caller.msg("Hold what?")
             return
 
-        #Detect if we're looking for multiple
-        target_obj = target_obj.split(" ")
-        if is_valid_cardinal(target_obj[0]):
-            count = cardinal_to_index(target_obj[0])
-            del target_obj[0]
-            target_obj = " ".join(target_obj)
-        else:
-            target_obj = " ".join(target_obj)
-
-        obj = caller.search(
-            target_obj,
-            location=caller,
-            nofound_string=f"You aren't carrying {self.args.strip()}.",
-            quiet=True
-        )
-
-        if len(obj) == 1:
-            obj = obj[0]
-        elif len(obj) > 1 and count is None:
-            #See if we can figure this out by which item is being held in the hand.
-            if caller.db.l_hand is None or caller.db.r_hand is None:
-                for i in obj:
-                    if i == caller.db.r_hand:
-                        caller.db.r_hand = None
-                        caller.msg(f"You put your {i} away.")
-                        caller.location.msg_contents(genderize(f"{caller.name} puts %p {i} away.",caller.db.gender), exclude=caller)
-                        return
-                    elif i == caller.db.l_hand:
-                        caller.db.l_hand = None
-                        caller.msg(f"You put your {i} away.")
-                        caller.location.msg_contents(genderize(f"{caller.name} puts %p {i} away.",caller.db.gender), exclude=caller)
-                        return
-            print_cardinal_list(f"Which {target_obj}?", obj, caller)
+        #Search for the object
+        obj = caller.multiple_search(target_obj)
+        if not obj:
             return
-        elif len(obj) > 1 and count >= 0:
-            obj = obj[count]
 
+        #Makre sure we're holding the object
         if caller.db.r_hand == obj:
             caller.db.r_hand = None
         elif caller.db.l_hand == obj:
             caller.db.l_hand = None
         else:
             caller.msg(f"You are not holding {self.args.strip()}.")
+            return
 
+        #Message player and room
         caller.msg(f"You put your {obj} away.")
         caller.location.msg_contents(genderize(f"{caller.name} puts %p {obj} away.",caller.db.gender), exclude=caller)
 
@@ -539,105 +447,54 @@ class CmdGet(BaseCommand):
     arg_regex = r"\s|$"
 
     def func(self):
-        args = self.args
+        args = self.args.strip()
         caller = self.caller
         location = self.caller.location
         error_msg = "Usage: take <object> from <container>"
-        count = None
         if not args:
             caller.msg(error_msg)
             return
 
-        #Split args out
-        args_list = args.strip().split(" ")
-        #Check for cardinals
-        if is_valid_cardinal(args_list[0].strip()):
-            count = cardinal_to_index(args_list[0].strip())
-            del args_list[0]
-        try:
-            split = args_list.index("from")
-        #Case 1, regular take
-        except:
-            #Identify and find object
-            target_obj = " ".join(args_list)
-            obj = caller.search(target_obj,quiet=True,location=caller.location)
-
-            #Check for multiple
-            if len(obj) == 0: 
-                caller.msg(f"You don't see a {target_obj} in here.")
-                return
-            elif len(obj) == 1:
-                obj = obj[0]
-            elif len(obj) > 1 and count is None:
-                print_cardinal_list(f"Which {target_obj}?", obj, caller)
-                return
-            elif count is not None:
-                obj = obj[count]
-
-            #move object into character hands
-            if not (caller.db.l_hand == None or caller.db.r_hand == None):
-                caller.msg(f"Your hands are full.")
-                return
-
-            # calling at_before_get hook method
-            if not obj.at_before_get(caller):
-                return
-
-            #Grab the item and call the post-grab hook
-            if caller.db.r_hand == None:
-                obj.move_to(caller, quiet=True)
-                caller.db.r_hand = obj
-                obj.at_get(caller)
-                caller.msg(f"You take the {obj}") 
-            elif caller.db.l_hand == None:
-                obj.move_to(caller, quiet=True)
-                caller.db.l_hand = obj
-                obj.at_get(caller)
-                caller.msg(f"You take the {obj}") 
-
-            return
-
-        #Case 2, take from container
-        target_obj = " ".join(args_list[:split])
-        target_container = " ".join(args_list[split+1:])
-        if not target_obj or not target_container:
-            caller.msg(error_msg)
-            return 
-
-        #verify container
-        container = caller.search(target_container)
-        if not container:
-            caller.msg(error_msg)
-            return 
-
-        #find object in container
-        obj = container.search(target_obj, location=container)
-        if not obj:
-            caller.msg(f"Cannot find {target_obj} in {container}")
-            caller.msg(error_msg)
-            return 
-
-        #move object into character hands
+        #Check for full hands
         if not (caller.db.l_hand == None or caller.db.r_hand == None):
             caller.msg(f"Your hands are full.")
             return
+
+        #Determine if we're taking from a container
+        if " from " in args:
+            arg_list = args.split(" from ")
+            container = caller.multiple_search(arg_list[1], location=caller.location)
+            if not container:
+                return
+            obj = caller.multiple_search(arg_list[0], location=container)
+            if not obj:
+                return
+        else:
+            obj = caller.multiple_search(args, location=caller.location)
+            if not obj:
+                return
+            container = None
 
         # calling at_before_get hook method
         if not obj.at_before_get(caller):
             return
 
-        #Grab and call the post-grab hook.
+        #Grab the item and call the post-grab hook
         if caller.db.r_hand == None:
             obj.move_to(caller, quiet=True)
             caller.db.r_hand = obj
-            obj.at_get(caller)
         elif caller.db.l_hand == None:
             obj.move_to(caller, quiet=True)
             caller.db.l_hand = obj
-            obj.at_get(caller)
 
-        caller.msg(f"You take a {obj} from the {container}.")
-        container.location.msg_contents(f"{caller} takes a {obj} from the {container}.", exclude=caller)
+        if not container:
+            caller.msg(f"You take the {obj}.")
+            caller.location.msg_contents(f"{caller} takes a {obj} from the {container}.", exclude=caller)
+        else:
+            caller.msg(f"You take the {obj} from the {container}.")
+            caller.location.msg_contents(f"{caller} takes a {obj} from the {container}.", exclude=caller)
+
+        return
 
             
 
@@ -717,7 +574,9 @@ class CmdUse(BaseCommand):
             caller.msg("What do you want to use?")
             return
         
-        target = caller.search(self.args.strip())
+        target = caller.multiple_search(args.strip(), location=caller.location)
+        if not target:
+            return
 
         if not (caller.db.l_hand == None or caller.db.r_hand == None):
             caller.msg(f"How do you expect to use the {target} with both your hands full?")
@@ -742,37 +601,14 @@ class CmdDrop(BaseCommand):
     def func(self):
         caller = self.caller
         target_obj = self.args.strip()
-        count = None
         if not self.args:
             caller.msg("Drop what?")
             return
 
         #Detect if we're looking for multiple
-        target_obj = target_obj.split(" ")
-        if is_valid_cardinal(target_obj[0]):
-            count = cardinal_to_index(target_obj[0])
-            del target_obj[0]
-            target_obj = " ".join(target_obj)
-        else:
-            target_obj = " ".join(target_obj)
-
-        obj = caller.search(
-            target_obj,
-            location=caller,
-            nofound_string="You aren't carrying %s." % self.args,
-            multimatch_string="You carry more than one %s:" % self.args,
-            quiet=True
-        )
-
-        if len(obj) == 0:
-            caller.msg(f"You don't have a {target_obj} to drop.")
-        elif len(obj) > 1 and count == None:
-            print_cardinal_list(f"Drop which {target_obj}?", obj, caller)
+        obj = caller.multiple_search(target_obj)
+        if not obj:
             return
-        elif len(obj) >1 and not count == None:
-            obj = obj[count]
-        else:
-            obj = obj[0]
 
         # Call the object script's at_before_drop() method.
         if not obj.at_before_drop(caller):
@@ -807,11 +643,8 @@ class CmdOpen(BaseCommand):
         caller = self.caller
         target_obj = self.args.strip()
 
-        obj = caller.search(
-            target_obj
-        )
-
-        if not object:
+        obj = caller.multiple_search(target_obj, location=caller.location)
+        if not obj:
             return
 
         if not (obj.db.door or obj.db.container):
@@ -845,11 +678,10 @@ class CmdClose(BaseCommand):
         caller = self.caller
         target_obj = self.args.strip()
 
-        obj = caller.search(
-            target_obj
-        )
-        if not object:
+        obj = caller.multiple_search(target_obj, location=caller.location)
+        if not obj:
             return
+
         if not (obj.db.door or obj.db.container):
             caller.msg(f"It doesn't look like the {obj} is something you can close.")
             return
