@@ -257,7 +257,7 @@ class Character(DefaultCharacter):
         )
 
         if len(obj) == 0:
-            caller.msg(f"You aren't carrying {self.args.strip()}")
+            self.msg(f"You aren't carrying {target_obj}")
             return None
         elif len(obj) > 1 and count is None:
             print_cardinal_list(f"Which {target_obj}?", obj, self)
