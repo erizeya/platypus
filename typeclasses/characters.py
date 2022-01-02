@@ -9,7 +9,7 @@ creation commands.
 """
 from evennia import DefaultCharacter
 from evennia.utils import make_iter
-from custom import genderize 
+from custom import genderize, cardinal_to_index, is_valid_cardinal, print_cardinal_list 
 
 class Character(DefaultCharacter):
     """
@@ -234,3 +234,35 @@ class Character(DefaultCharacter):
                 exclude=exclude,
                 mapping=location_mapping,
             )
+
+    def multiple_search(self, target_obj, **kwargs):
+
+        location = self
+        count = None
+        if "location" in kwargs:
+            location = kwargs["location"]
+
+        target_obj = target_obj.split(" ")
+        if is_valid_cardinal(target_obj[0]):
+            count = cardinal_to_index(target_obj[0])
+            del target_obj[0]
+            target_obj = " ".join(target_obj)
+        else:
+            target_obj = " ".join(target_obj)
+
+        obj = self.search(
+            target_obj,
+            location=location,
+            quiet=True,
+        )
+
+        if len(obj) == 0:
+            caller.msg(f"You aren't carrying {self.args.strip()}")
+            return None
+        elif len(obj) > 1 and count is None:
+            print_cardinal_list(f"Which {target_obj}?", obj, self)
+            return None
+        elif len(obj) > 1 and not count is None:
+            return obj[count]
+        else:
+            return obj[0]
