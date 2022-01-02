@@ -654,14 +654,20 @@ class CmdPut(BaseCommand):
         args = self.args
         caller = self.caller
         location = self.caller.location
+        count = None
         error_msg = "Usage: put <object> in <container>"
         if not args:
             caller.msg(error_msg)
             return
 
+
         #Split args out
         args_list = args.strip().split(" ")
-        split = args_list.index("in")
+        try:
+            split = args_list.index("in")
+        except:
+            caller.msg(error_msg)
+            return 
         target_obj = " ".join(args_list[:split])
         target_container = " ".join(args_list[split+1:])
         if not target_obj or not target_container:
@@ -669,13 +675,13 @@ class CmdPut(BaseCommand):
             return 
 
         #verify container
-        container = caller.search(target_container)
+        container = caller.multiple_search(target_container, location=caller.location)
         if not container:
             caller.msg(error_msg)
             return 
 
         #find object in character's hand
-        obj = caller.search(target_obj, location=caller)
+        obj = caller.multiple_search(target_obj)
         if not obj:
             caller.msg(error_msg)
             return
@@ -683,7 +689,7 @@ class CmdPut(BaseCommand):
             caller.msg(f"You have to be holding your {obj} to put it {container.db.prep} the {container}.")
             return
 
-        #move object into character hands
+        #remove object from character hands
         if caller.db.r_hand == obj:
             obj.move_to(container, quiet=True)
             caller.db.r_hand = None
