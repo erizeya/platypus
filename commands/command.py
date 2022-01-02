@@ -1,10 +1,6 @@
 from evennia.commands.command import Command as BaseCommand
 from evennia.utils import utils, evtable
-from evennia.utils.search import search_object
-from custom import cardinal_to_index, is_valid_cardinal, print_cardinal_list
 from custom import genderize
-from typeclasses.npc import Npc
-from typeclasses.furniture import Bar
 
 class Command(BaseCommand):
     pass
@@ -212,59 +208,6 @@ class CmdStand(BaseCommand):
         else:
             caller.msg("You are not sitting.")
 
-# Set your look place
-# 
-# Usage:
-#   @lp <look place message>
-# 
-class CmdLp(BaseCommand):
-    key = "@lp"
-    aliases = []
-    lock = "cmd:all()"
-    help_category = "General"
-
-    def func(self):
-        if not self.args:
-            self.caller.msg("@look_place message cleared.")
-            self.caller.db.look_place = " is here."
-        else:
-            self.caller.db.look_place = self.args
-        self.caller.msg(f"Other players now see: {self.caller}{self.caller.db.look_place}")
-
-# Set or display your nakeds
-# 
-# Usage:
-#   @naked[s]
-#       Display all nakeds as a lit
-#   @naked[s] <location> = <description>
-#       Set a specific naked 
-#
-class CmdNaked(BaseCommand):
-    """
-    """
-    key = "@naked"
-    aliases = ["@nakeds"]
-    lock = "cmd:all()"
-    help_category = "General"
-
-
-    def func(self):
-        nakeds = ["head", "face", "upper_body", "hands", "lower_body", "feet"]
-        if not self.args:
-            for naked in nakeds:
-                self.caller.msg(f"@naked {naked} = "+self.caller.db.naked[naked])
-        else:
-            arg_list = self.args.split("=")
-            l_arg = arg_list[0].strip()
-            r_arg = arg_list[1].strip()
-
-            #Set object properties
-            if l_arg in nakeds:
-                self.caller.db.naked[l_arg] = r_arg
-                self.caller.msg(f"@naked {l_arg} is now \"{r_arg}\"")
-            else:
-                self.caller.msg("Invalid naked location")
-
 # Direct a message to a specific player or group of players
 #
 # Usage:
@@ -408,32 +351,6 @@ class CmdLower(BaseCommand):
         #Message player and room
         caller.msg(f"You put your {obj} away.")
         caller.location.msg_contents(genderize(f"{caller.name} puts %p {obj} away.",caller.db.gender), exclude=caller)
-
-# Change your preferred pronouns
-#
-# Usage:
-#   @pronouns <pronoun number>
-#
-class CmdGender(BaseCommand):
-    key = "@pronouns"
-    locks = "cmd:all()"
-
-    def func(self):
-        caller = self.caller
-        help_msg = "Usage: @pronouns [type]\nValid options:\n\tfeminine\n\tmasculine\n\tspivak"
-        if not self.args:
-            caller.msg(help_msg)
-            return
-        else:
-            arg = self.args.split(" ")[1].strip()
-            if arg == "feminine":
-                caller.db.gender = 1
-            elif arg == "masculine":
-                caller.db.gender = 2
-            elif arg == "spivak":
-                caller.db.gender = 0
-            else:
-                caller.msg(help_msg)
 
 # Take an item from the ground
 #
@@ -718,65 +635,3 @@ class CmdClose(BaseCommand):
 
         caller.msg(f"You close the {obj}")
         return
-
-class CmdPair(BaseCommand):
-
-    key = "!pair"
-    locks = "cmd:all()"
-
-    def func(self):
-        caller = self.caller
-        arg_list = self.args.strip().split(" ") 
-        target_obj = arg_list[0]
-        target_link = arg_list[1]
-
-        obj = caller.search(
-            target_obj
-        )
-
-        link = search_object(
-            target_link,
-            exact = True
-        )[0]
-
-        if not (obj.db.door and link.db.door):
-            caller.msg(f"Both objects need to be doors.")
-            return
-
-        caller.msg(f"Linking {obj} to {link}")
-
-        obj.db.pair = link 
-        link.db.pair = obj
-
-class CmdLink(BaseCommand):
-
-    key = "!link"
-    locks = "cmd:all()"
-
-    def func(self):
-        caller = self.caller
-        arg_list = self.args.strip().split(" ") 
-        target_obj = arg_list[0]
-        target_link = arg_list[1]
-        help_str = "Usage !link <NPC> <Bar>"
-
-        obj = caller.search(
-            target_obj
-        )
-
-        link = search_object(
-            target_link,
-            exact = True
-        )[0]
-
-        if not type(obj) is Npc:
-            caller.msg(f"First argument must be an NPC\n{help_str}")
-            return
-
-        if not type(link) is Bar:
-            caller.msg(f"Second argument must be an NPC\n{help_str}")
-            return
-
-        obj.db.link = link
-
-        caller.msg(f"Linked {obj} to {link}")

@@ -20,20 +20,20 @@ from commands.command import CmdRemove
 from commands.command import CmdInventory
 from commands.command import CmdSit
 from commands.command import CmdStand
-from commands.command import CmdLp
-from commands.command import CmdNaked
 from commands.command import CmdTo
 from commands.command import CmdHold
 from commands.command import CmdLower
-from commands.command import CmdGender
 from commands.command import CmdGet
 from commands.command import CmdPut
 from commands.command import CmdUse
 from commands.command import CmdDrop
 from commands.command import CmdOpen
 from commands.command import CmdClose
-from commands.command import CmdPair
-from commands.command import CmdLink
+from commands.meta.lp import CmdLp
+from commands.meta.naked import CmdNaked
+from commands.meta.pronouns import CmdPronouns
+from commands.admin.pair import CmdPair
+from commands.admin.link import CmdLink
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -63,7 +63,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdTo())
         self.add(CmdHold())
         self.add(CmdLower())
-        self.add(CmdGender())
+        self.add(CmdPronouns())
         self.add(CmdGet())
         self.add(CmdPut())
         self.add(CmdUse())
