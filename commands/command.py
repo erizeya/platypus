@@ -466,6 +466,16 @@ class CmdGet(BaseCommand):
             container = caller.multiple_search(arg_list[1], location=caller.location)
             if not container:
                 return
+            #Make sure the container is actually a container
+            if not container.db.container:
+                caller.msg(f"You can't put stuff into the {container}.")
+                return
+
+            #Ensure the container is open
+            if not container.db.open:
+                caller.msg(f"The {container} is closed.")
+                return
+
             obj = caller.multiple_search(arg_list[0], location=container)
             if not obj:
                 return
@@ -536,6 +546,16 @@ class CmdPut(BaseCommand):
         if not container:
             caller.msg(error_msg)
             return 
+
+        #Ensure the container is really a container
+        if not container.db.container:
+            caller.msg(f"You can't take anything from the {container}")
+            return
+
+        #Ensure the container is open
+        if not container.db.open:
+            caller.msg(f"The {container} is closed.")
+            return
 
         #find object in character's hand
         obj = caller.multiple_search(target_obj)
