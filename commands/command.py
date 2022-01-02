@@ -170,15 +170,16 @@ class CmdSit(BaseCommand):
 
             if target:
                 #Find the object to sit on and confirm we can sit on it.
-                target_obj = caller.search(target)
-                if target_obj and target_obj.db.furniture and target_obj.db.seating:
-                    caller.msg(f"You sit on the {target_obj}.")
-                    caller.location.msg_contents(f"{caller.name} sits on the {target_obj}.",exclude=caller)
-                    target_obj.db.occupants.append(caller)
-                    caller.db.occupying = target_obj
+                
+                obj = caller.multiple_search(target,location=caller.location)
+                if obj and obj.db.furniture and obj.db.seating:
+                    caller.msg(f"You sit on the {obj}.")
+                    caller.location.msg_contents(f"{caller.name} sits on the {obj}.",exclude=caller)
+                    obj.db.occupants.append(caller)
+                    caller.db.occupying = obj
                     caller.db.sitting = True
                 else: 
-                    caller.msg(f"You can't sit on {target_obj}")
+                    caller.msg(f"You can't sit on {obj}")
             else:
                 caller.msg("Usage: sit[ [on/at] <furniture>]")
 

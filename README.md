@@ -128,7 +128,6 @@ Links a bartender NPC to the bar. When linked to a bar an NPC may serve the food
     - [ ] Automatically create door pairing when generating rooms/exits.
 - [ ] Add multiple support for...
    - [ ] `look`
-   - [ ] `sit`
 - [ ] Add permissions to bars so that only approved characters/npcs can use it.
 - [ ] Refactor
    - [ ] eat/drink commands to format `eat/drink <item>`
