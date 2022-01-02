@@ -256,8 +256,11 @@ class Character(DefaultCharacter):
             quiet=True,
         )
 
-        if len(obj) == 0:
-            self.msg(f"You aren't carrying {target_obj}")
+        if len(obj) == 0 and location == self:
+            self.msg(f"You aren't carrying a {target_obj}")
+            return None
+        elif len(obj) == 0:
+            self.msg(f"You don't see a {target_obj}")
             return None
         elif len(obj) > 1 and count is None:
             print_cardinal_list(f"Which {target_obj}?", obj, self)
