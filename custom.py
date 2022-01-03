@@ -121,6 +121,6 @@ def print_cardinal_list(msg, objs, caller):
     caller.msg(msg)
     count = 0
     for obj in objs:
-        caller.msg(f"  {obj} ("+index_to_cardinal(count)+")")
+        caller.msg(f"  ({index_to_cardinal(count)}) {obj} ({obj.location})")
         count += 1
     return
