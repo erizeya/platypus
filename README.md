@@ -127,4 +127,4 @@ Links a bartender NPC to the bar. When linked to a bar an NPC may serve the food
 - [ ] Add permissions to bars so that only approved characters/npcs can use it.
 - [ ] Refactor
    - [ ] eat/drink commands to format `eat/drink <item>`
-   - [ ] `!furniture` commands to format `!furniture <item> <sub command> <input>` 
+   - [ ] Split commands into individual files
