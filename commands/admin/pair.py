@@ -4,7 +4,7 @@ from evennia.utils.search import search_object
 class CmdPair(BaseCommand):
 
     key = "!pair"
-    locks = "cmd:all()"
+    locks = "cmd:perm_above(Helper)"
 
     def func(self):
         caller = self.caller

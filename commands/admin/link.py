@@ -6,7 +6,7 @@ from typeclasses.furniture import Bar
 class CmdLink(BaseCommand):
 
     key = "!link"
-    locks = "cmd:all()"
+    locks = "cmd:perm_above(Helper)"
 
     def func(self):
         caller = self.caller
