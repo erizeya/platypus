@@ -332,7 +332,7 @@ class CmdLower(BaseCommand):
         caller = self.caller
         target_obj = self.args.strip()
         if not self.args:
-            caller.msg("Hold what?")
+            caller.msg("Lower what?")
             return
 
         #Search for the object
