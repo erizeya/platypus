@@ -594,7 +594,11 @@ class CmdOpen(BaseCommand):
             return
 
         #Open the door
-        obj.db.open = True
+        if not obj.db.locked:
+            obj.db.open = True
+        else:
+            caller.msg(f"The {obj} is locked.")
+            return
 
         #Open the other side too if acting on a door
         if obj.db.door:

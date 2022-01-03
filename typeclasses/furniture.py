@@ -29,6 +29,7 @@ class Container(Furniture):
         self.db.container = True
         self.db.prep = "in"
         self.db.open = True
+        self.db.locked = False
 
     def return_appearance(self, looker):
         text = f"|c{self.get_display_name(looker)}|n"
@@ -51,6 +52,89 @@ class Container(Furniture):
 
         return text
 
+class LockingContainer(Container):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.code = 1234
+        self.db.programming = False
+
+    def on_push(self, caller, args):
+        mode = "unlock"
+        #function: push lock on container
+        if args == "lock":
+            #Check error conditions
+            if self.db.open:
+                self.location.msg_contents(f"The {self} beeps angrily and the \"container open\" light flashes three times.")
+                return
+            elif self.db.locked:
+                self.location.msg_contents(f"The {self} doesn't do anything. It must already be locked.")
+                return
+
+            #All checks pass, unlock the locker
+            self.db.locked = True
+            self.location.msg_contents(f"The {self} beeps happily and a lock clicks into place.")
+            return
+
+        #function: push program <code> on locker
+        if "program " in args:
+            args = args.replace("program ", "")
+            mode = "program"
+
+        #function: push cancel on locker
+        if args == "cancel":
+            if self.db.programming:
+                self.db.programming = False
+                self.location.msg_contents(f"The {self} beeps happily and the \"programming\" light stops blinking.")
+            else:
+                self.location.msg_contents(f"Nothing happens.")
+            return
+        
+        #function: push <code> on container
+        try:
+            code = int(args)
+        except:
+            self.location.msg_contents(f"The {self} beeps angrily.")
+            return
+
+        if self.db.programming:
+            self.db.code = code
+            self.location.msg_contents(f"The {self} beeps twice.")
+            return
+
+        if code == self.db.code:
+            if mode == "unlock":
+                if self.db.locked:
+                    self.location.msg_contents(f"The {self} beeps happily and unlocks.")
+                    self.db.locked = False
+                else:
+                    self.location.msg_contents(f"Nothing happens.")
+                return
+
+            elif mode == "program":
+                self.location.msg_contents(f"The {self} beeps happily and the \"programming\" light begins to blink.")
+                self.db.programming = True
+                return
+
+        else:
+            self.location.msg_contents(f"The {self} beeps angrily.")
+            return
+
+
+class Beeper(Furniture):
+    def at_object_creation(self):
+        super().at_object_creation();
+
+    def on_push(self, caller, args):
+        try:
+            count = int(args)
+        except:
+            caller.msg(f"The {self} doesn't do anything.")
+            return
+
+        for i in range(0, count):
+            self.location.msg_contents(f"The {self} beeps.")
+
+
 class Bar(Furniture):
     def at_object_creation(self):
         super().at_object_creation();
@@ -58,7 +142,6 @@ class Bar(Furniture):
         self.db.seating = False
         self.db.wares = {"Tea":50, "Rice":25}
 
-    
     def on_use(self, user):
         evmenu.EvMenu(user, "typeclasses.furniture", startnode="menunode_bar", cmd_on_exit=None, obj=self)
 

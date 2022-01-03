@@ -13,5 +13,5 @@ inheritance.
 from evennia import DefaultObject
 
 class Object(DefaultObject):
-    def on_push(self):
+    def on_push(self, caller, args):
         return 
