@@ -238,9 +238,14 @@ class Character(DefaultCharacter):
     def multiple_search(self, target_obj, **kwargs):
 
         location = self
+        mode = None
         count = None
+
         if "location" in kwargs:
             location = kwargs["location"]
+
+        if "mode" in kwargs:
+            mode = kwargs["mode"]
 
         target_obj = target_obj.split(" ")
         if is_valid_cardinal(target_obj[0]):
@@ -250,13 +255,22 @@ class Character(DefaultCharacter):
         else:
             target_obj = " ".join(target_obj)
 
-        obj = self.search(
-            target_obj,
-            location=location,
-            quiet=True,
-        )
+        if mode is "look":
+            obj = self.search(
+                target_obj,
+                quiet=True,
+            )
+        else:
+            obj = self.search(
+                target_obj,
+                location=location,
+                quiet=True,
+            )
 
-        if len(obj) == 0 and location == self:
+        if len(obj) == 0 and mode is "look":
+            self.msg(f"You don't see a {target_obj}")
+            return None
+        elif len(obj) == 0 and location == self:
             self.msg(f"You aren't carrying a {target_obj}")
             return None
         elif len(obj) == 0:
