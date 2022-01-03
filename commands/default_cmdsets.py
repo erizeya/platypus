@@ -31,6 +31,7 @@ from commands.command import CmdOpen
 from commands.command import CmdClose
 from commands.base.look import CmdLook
 from commands.base.give import CmdGive
+from commands.base.push import CmdPush
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
@@ -78,6 +79,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdLook())
         self.add(CmdGive())
         self.add(CmdFurniture())
+        self.add(CmdPush())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
