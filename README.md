@@ -116,8 +116,6 @@ Links a bartender NPC to the bar. When linked to a bar an NPC may serve the food
     - [ ] `bare` commands for in-character actions
     - [ ] `@at-sign` commands for OOC actions
     - [ ] `!exclamation` commands for admin commands
-- [ ] Normalize command behavior.
-   - [ ] `give`
 - [ ] New commands
    - [ ] `lower[-left/-right]`
    - [ ] `free`/`freehands`/`fh`
@@ -126,8 +124,6 @@ Links a bartender NPC to the bar. When linked to a bar an NPC may serve the food
 - [ ] Code Lock
 - [ ] Doors
     - [ ] Automatically create door pairing when generating rooms/exits.
-- [ ] Add multiple support for...
-   - [ ] `look`
 - [ ] Add permissions to bars so that only approved characters/npcs can use it.
 - [ ] Refactor
    - [ ] eat/drink commands to format `eat/drink <item>`
