@@ -30,6 +30,7 @@ from commands.command import CmdDrop
 from commands.command import CmdOpen
 from commands.command import CmdClose
 from commands.base.look import CmdLook
+from commands.base.give import CmdGive
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
@@ -74,6 +75,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdPair())
         self.add(CmdLink())
         self.add(CmdLook())
+        self.add(CmdGive())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
