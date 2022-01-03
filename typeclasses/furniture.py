@@ -3,7 +3,6 @@ from evennia.utils import evmenu
 from evennia.utils.utils import list_to_string
 from evennia import default_cmds
 from evennia import create_object
-from commands.furniturecommands import FurnitureCmdSet
 
 class Furniture(Object):
     """
@@ -11,7 +10,6 @@ class Furniture(Object):
     """
     def at_object_creation(self):
         "This is called only when object is first created"
-        self.cmdset.add(FurnitureCmdSet, permanent=True)
         self.locks.add("puppet:superuser()")
 
         #Item specific traits

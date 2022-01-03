@@ -36,6 +36,7 @@ from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
 from commands.admin.pair import CmdPair
 from commands.admin.link import CmdLink
+from commands.admin.furniture import CmdFurniture
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -76,6 +77,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdLink())
         self.add(CmdLook())
         self.add(CmdGive())
+        self.add(CmdFurniture())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
