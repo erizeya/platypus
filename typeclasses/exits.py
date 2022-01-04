@@ -35,7 +35,7 @@ class Exit(DefaultExit):
                                         defined, in which case that will simply be echoed.
     """
     def at_object_creation(self):
-        self.db.door = True
+        self.db.door = False
         self.db.open = True
         self.db.pair = None
         self.db.see_thru = True

@@ -38,6 +38,8 @@ from commands.meta.pronouns import CmdPronouns
 from commands.admin.pair import CmdPair
 from commands.admin.link import CmdLink
 from commands.admin.furniture import CmdFurniture
+from commands.admin.dig import _CmdDig
+from commands.admin.dig import CmdDig
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -80,6 +82,8 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdGive())
         self.add(CmdFurniture())
         self.add(CmdPush())
+        self.add(_CmdDig())
+        self.add(CmdDig())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):

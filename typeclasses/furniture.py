@@ -53,6 +53,9 @@ class Container(Furniture):
         return text
 
 class LockingContainer(Container):
+    """
+    This is a test
+    """
     def at_object_creation(self):
         super().at_object_creation()
         self.db.code = 1234
