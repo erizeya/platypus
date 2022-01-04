@@ -78,6 +78,27 @@ Consume a currently held food item. Does not support multiples.
 `drink`  
 Consume a currenty held drink item Does not support multiples.
 
+#### Locking Containers (Passcode)
+
+Locking containers can be used to securely(?) store items and support the following commands
+
+`push lock on <container>`
+Locks the container. Containers must be closed to be locked.
+
+`push <passcode> on <container>`
+Unlocks the container given the passcode is correct. 
+
+`push program <passcode> on <container>`
+Puts the container into programming mode. From this point forward, using the syntax `push <passcode> on <container>` will set the container's passcode to the provided code. Container remains in programming mode until the cancel button is pushed.
+
+`push cancel on <container>`
+Causes the container to exit programming mode.
+
+
+
+#### Locking Containers (Key) - TBA
+
+
 ### OOC Commands
 `@lp`  
 Changes your character's "look_place" message, the message which is displayed in a room description.  
