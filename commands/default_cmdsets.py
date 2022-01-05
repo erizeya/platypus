@@ -40,6 +40,7 @@ from commands.admin.link import CmdLink
 from commands.admin.furniture import CmdFurniture
 from commands.admin.dig import _CmdDig
 from commands.admin.dig import CmdDig
+from commands.admin.doorside import CmdDoorside
 from commands.admin.tunnel import _CmdTunnel
 from commands.admin.tunnel import CmdTunnel
 
@@ -88,6 +89,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdDig())
         self.add(_CmdTunnel())
         self.add(CmdTunnel())
+        self.add(CmdDoorside())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
