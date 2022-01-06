@@ -15,7 +15,7 @@ class _CmdTunnel(Command):
     aliases = ["@tun", "tun", "tunnel"]
     switch_options = ("oneway", "tel")
     locks = "cmd: perm(tunnel) or perm(Builder)"
-    help_category = "Building"
+    help_category = "Deprecated"
 
     def func(self):
         self.caller.msg("Depricated. Please use !tunnel instead.")

@@ -7,6 +7,7 @@ class CmdLink(BaseCommand):
 
     key = "!link"
     locks = "cmd:perm_above(Helper)"
+    help_category = "Building"
 
     def func(self):
         caller = self.caller

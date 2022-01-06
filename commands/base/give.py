@@ -10,6 +10,7 @@ class CmdGive(BaseCommand):
     locks = "cmd:all()"
     arg_regex = r"\s|$"
     err_msg = "Usage: give <object> to <target>"
+    help_category = "General"
 
     def func(self):
         """Implement give"""

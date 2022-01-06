@@ -5,6 +5,7 @@ class CmdPair(BaseCommand):
 
     key = "!pair"
     locks = "cmd:perm_above(Helper)"
+    help_category = "Building"
 
     def func(self):
         caller = self.caller

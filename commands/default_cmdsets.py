@@ -32,6 +32,8 @@ from commands.command import CmdClose
 from commands.base.look import CmdLook
 from commands.base.give import CmdGive
 from commands.base.push import CmdPush
+from commands.base.eat import CmdEat 
+from commands.base.drink import CmdDrink 
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
@@ -83,6 +85,8 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdLink())
         self.add(CmdLook())
         self.add(CmdGive())
+        self.add(CmdEat())
+        self.add(CmdDrink())
         self.add(CmdFurniture())
         self.add(CmdPush())
         self.add(_CmdDig())

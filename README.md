@@ -142,9 +142,6 @@ Links a bartender NPC to the bar. When linked to a bar an NPC may serve the food
    - [ ] `free`/`freehands`/`fh`
 - [ ] Currency
     - [ ] Bar tender must take money.
-- [ ] Code Lock
-    - [x] Containers
-    - [ ] Doors
 - [ ] Add permissions to bars so that only approved characters/npcs can use it.
 - [ ] Refactor
    - [ ] eat/drink commands to format `eat/drink <item>`

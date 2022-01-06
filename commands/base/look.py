@@ -14,6 +14,7 @@ class CmdLook(BaseCommand):
     aliases = ["l", "ls"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
+    help_category = "General"
 
     def func(self):
         """

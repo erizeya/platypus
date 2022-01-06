@@ -9,6 +9,7 @@ class CmdPush(BaseCommand):
     locks = "cmd:all()"
     arg_regex = r"\s|$"
     err_msg = "Usage: push <what> on <obj>"
+    help_category = "General"
 
     def func(self):
         args = self.args.strip()

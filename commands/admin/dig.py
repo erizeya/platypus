@@ -9,6 +9,7 @@ class _CmdDig(ObjManipCommand):
 
     key = "@dig"
     aliases = "dig"
+    help_category = "Deprecated"
 
     def func(self):
         self.caller.msg("Deprecated. Please use !dig instead.")
