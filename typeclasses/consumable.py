@@ -1,6 +1,4 @@
 from typeclasses.objects import Object
-from commands.consumablecommands import FoodCmdSet
-from commands.consumablecommands import DrinkCmdSet
 
 class Consumable(Object):
     """
@@ -20,7 +18,6 @@ class Consumable(Object):
 class Food(Consumable):
     def at_object_creation(self):
         super().at_object_creation()
-        self.cmdset.add(FoodCmdSet, permanent=True)
         self.name = "generic food"
         self.db.static_name = self.name
         self.db.desc = "A generic piece of food."
@@ -51,7 +48,6 @@ class Rice(Food):
 class Drink(Consumable):
     def at_object_creation(self):
         super().at_object_creation()
-        self.cmdset.add(DrinkCmdSet, permanent=True)
         self.name = "generic drink"
         self.db.static_name = self.name
         self.db.desc = "A generic glass of drink."
