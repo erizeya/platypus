@@ -19,6 +19,7 @@ class Food(Consumable):
     def at_object_creation(self):
         super().at_object_creation()
         self.name = "generic food"
+        self.db.food = True
         self.db.static_name = self.name
         self.db.desc = "A generic piece of food."
         self.db.messages = {
@@ -49,6 +50,7 @@ class Drink(Consumable):
     def at_object_creation(self):
         super().at_object_creation()
         self.name = "generic drink"
+        self.db.drink = True
         self.db.static_name = self.name
         self.db.desc = "A generic glass of drink."
         self.db.messages = {

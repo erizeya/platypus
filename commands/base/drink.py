@@ -22,6 +22,14 @@ class CmdDrink(Command):
         if not obj:
             return
 
+        if not obj.db.drink:
+            if obj.db.food:
+                caller.msg(f"You can't drink the {obj}. Try eating it instead?")
+            else:
+                caller.msg(f"You can't eat the {obj}.")
+            return
+
+
         if caller.db.l_hand == obj or caller.db.r_hand == obj:
             obj.db.charges -= 1
             if obj.db.untouched:

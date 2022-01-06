@@ -22,6 +22,13 @@ class CmdEat(Command):
         obj = caller.multiple_search(target_obj)
         if not obj:
             return
+        
+        if not obj.db.food:
+            if obj.db.drink:
+                caller.msg(f"You can't eat the {obj}. Try drinking it instead?")
+            else:
+                caller.msg(f"You can't eat the {obj}.")
+            return
 
         obj.db.charges -= 1
         if obj.db.untouched:
