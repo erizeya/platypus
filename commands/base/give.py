@@ -9,7 +9,6 @@ class CmdGive(BaseCommand):
     key = "give"
     locks = "cmd:all()"
     arg_regex = r"\s|$"
-    err_msg = "Usage: give <object> to <target>"
     help_category = "General"
 
     def func(self):
@@ -19,6 +18,8 @@ class CmdGive(BaseCommand):
         args = self.args.strip()
         held = None
         dest_hand = None
+        err_msg = "Usage: give <object> to <target>"
+
         if not self.args:
             caller.msg(err_msg)
             return
