@@ -34,6 +34,7 @@ from commands.base.give import CmdGive
 from commands.base.push import CmdPush
 from commands.base.eat import CmdEat 
 from commands.base.drink import CmdDrink 
+from commands.base.free import CmdFree
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
@@ -94,6 +95,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(_CmdTunnel())
         self.add(CmdTunnel())
         self.add(CmdDoorside())
+        self.add(CmdFree())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
