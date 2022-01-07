@@ -22,7 +22,6 @@ from commands.command import CmdSit
 from commands.command import CmdStand
 from commands.command import CmdTo
 from commands.command import CmdHold
-from commands.command import CmdLower
 from commands.command import CmdGet
 from commands.command import CmdPut
 from commands.command import CmdUse
@@ -35,6 +34,7 @@ from commands.base.push import CmdPush
 from commands.base.eat import CmdEat 
 from commands.base.drink import CmdDrink 
 from commands.base.free import CmdFree
+from commands.base.lower import CmdLower
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
