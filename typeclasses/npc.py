@@ -49,14 +49,19 @@ class Npc(Character):
         self.execute_cmd(f"say {say}")
 
     def serve(self, **kwargs):
+        #Check hands
+        if self.db.l_hand or self.db.r_hand:
+            self.execute_cmd(f"fh")
+
         target = kwargs["target"]
         item = kwargs["item"].title()
         new = create_object("typeclasses.consumable."+item, key="new drink")
         new.reset_name()
-        new.move_to(self, silent=True)
-        self.execute_cmd(f"to {target} Here you go!")
         self.execute_cmd(f"emote whips up a {new} at the {self.db.link}.")
-        self.execute_cmd(f"give {item} = {target}") 
+        new.move_to(self, silent=True)
+        self.db.r_hand = new
+        self.execute_cmd(f"to {target} Here you go!")
+        self.execute_cmd(f"give first {item} to {target}") 
 
     def msg(self, text=None, from_obj=None, **kwargs):
         "Custom msg() method reacting to say."
