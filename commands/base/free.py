@@ -17,7 +17,7 @@ class CmdFree(BaseCommand):
     def func (self):
         caller = self.caller
 
-        if not (caller.db.r_hand and caller.db.l_hand):
+        if not caller.db.r_hand and not caller.db.l_hand:
             caller.msg("You are not holding anything.")
             return
         if caller.db.r_hand:
