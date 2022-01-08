@@ -1,5 +1,5 @@
-from evennia.commands.command import Command as BaseCommand
-class CmdPush(BaseCommand):
+from evennia import Command
+class CmdPush(Command):
     """
     Push a specific button or series of buttons on an object
     Usage:

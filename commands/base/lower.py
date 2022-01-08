@@ -1,7 +1,7 @@
-from evennia.commands.command import Command as BaseCommand
+from evennia import Command
 from custom import genderize
 
-class CmdLower(BaseCommand):
+class CmdLower(Command):
     """
     Lower a held item from being in-hand to inventory.
 

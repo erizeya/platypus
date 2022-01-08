@@ -1,7 +1,7 @@
-from evennia import Command as BaseCommand
+from evennia import Command
 from custom import genderize
 
-class CmdFree(BaseCommand):
+class CmdFree(Command):
     """
     Causes you to put everything in your hands back into your inventory.
 

@@ -1,11 +1,11 @@
-from evennia.commands.command import Command as BaseCommand
+from evennia import Command
 
 # give something to someone
 # Usage:
 #   give <inventory obj> <to||=> <target>
 # Gives an items from your inventory to another character,
 # placing it in their inventory.
-class CmdGive(BaseCommand):
+class CmdGive(Command):
     key = "give"
     locks = "cmd:all()"
     arg_regex = r"\s|$"

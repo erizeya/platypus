@@ -15,19 +15,19 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from commands.command import CmdWear
-from commands.command import CmdRemove
-from commands.command import CmdInventory
-from commands.command import CmdSit
-from commands.command import CmdStand
-from commands.command import CmdTo
-from commands.command import CmdHold
-from commands.command import CmdGet
-from commands.command import CmdPut
-from commands.command import CmdUse
-from commands.command import CmdDrop
-from commands.command import CmdOpen
-from commands.command import CmdClose
+from commands.base.wear import CmdWear
+from commands.base.remove import CmdRemove
+from commands.base.inventory import CmdInventory
+from commands.base.sit import CmdSit
+from commands.base.stand import CmdStand
+from commands.base.to import CmdTo
+from commands.base.hold import CmdHold
+from commands.base.get import CmdGet
+from commands.base.put import CmdPut
+from commands.base.use import CmdUse
+from commands.base.drop import CmdDrop
+from commands.base.open import CmdOpen
+from commands.base.close import CmdClose
 from commands.base.look import CmdLook
 from commands.base.give import CmdGive
 from commands.base.push import CmdPush

@@ -1,4 +1,4 @@
-from evennia.commands.command import Command as BaseCommand
+from evennia import Command
 
 # look at location or object
 # 
@@ -8,7 +8,7 @@ from evennia.commands.command import Command as BaseCommand
 #   look *<account>
 # 
 # Observes your location or objects in your vicinity.
-class CmdLook(BaseCommand):
+class CmdLook(Command):
 
     key = "look"
     aliases = ["l", "ls"]
