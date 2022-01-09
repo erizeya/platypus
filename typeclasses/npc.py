@@ -5,6 +5,9 @@ from evennia import create_object
 import re
 
 class Npc(Character):
+    def at_post_unpuppet(self, account, session=None, **kwargs):
+        pass
+
     def at_object_creation(self):
         super().at_object_creation()
         self.db.link = None

@@ -130,7 +130,6 @@ Links a bartender NPC to the bar. When linked to a bar an NPC may serve the food
 
 
 ## Known Bugs
-* Puppeted NPCs disappear from the room they occupy when the puppeting finishes.
 
 ## Todo List
 - [ ] Normalize commands:
