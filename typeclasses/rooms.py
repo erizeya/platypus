@@ -51,7 +51,7 @@ class Room(DefaultRoom):
             if con.destination:
                 exits.append(key)
             elif con.has_account or type(con) is Npc:
-                users.append(con)
+                users.insert(0, con)
             else:
                 #split out furniture
                 if(con.db.furniture):
