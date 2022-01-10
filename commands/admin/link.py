@@ -29,7 +29,7 @@ class CmdLink(BaseCommand):
         )[0]
 
         if not link:
-            caller.msg(f"Could not locate bar {link}.")
+            calle.msg(f"Could not locate bar {link}.")
             return
 
         if not type(obj) is Npc:
@@ -37,7 +37,7 @@ class CmdLink(BaseCommand):
             return
 
         if not type(link) is Bar:
-            caller.msg(f"Second argument must be an NPC\n{help_str}")
+            caller.msg(f"Second argument must be an bar\n{help_str}")
             return
 
         obj.db.link = link
