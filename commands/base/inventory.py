@@ -1,4 +1,6 @@
 from evennia import Command
+from evennia.utils.ansi import raw as raw_ansi
+from evennia import utils
 
 # View the contents of your inventory.
 # Usage:
@@ -20,7 +22,6 @@ class CmdInventory(Command):
         if not items:
             string = "You are not carrying anything."
         else:
-            from evennia.utils.ansi import raw as raw_ansi
 
             table = self.styled_table(border="header")
             for item in items:
