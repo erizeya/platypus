@@ -68,8 +68,8 @@ class Character(DefaultCharacter):
         self.db.look_place = " is here."
 
         "Funds"
-        currency = 0
-        bank = 99999
+        self.db.currency = 0
+        self.db.bank = 0
 
     def return_appearance(self, looker):
         # Display character name

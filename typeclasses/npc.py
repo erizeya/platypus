@@ -28,7 +28,7 @@ class Npc(Character):
             pattern = re.compile(pattern)
             if re.search(pattern, message.lower()):
                 res += f"Yeah. I can get you {item}, that'll be {link.db.wares[item.title()]} money."
-                delay(2, self.serve, target=from_obj, item=item)
+                delay(2, self.serve, target=from_obj, item=item, amount=link.db.wares[item.title()])
                 return res
 
         #Respond to hi
@@ -52,12 +52,24 @@ class Npc(Character):
         self.execute_cmd(f"say {say}")
 
     def serve(self, **kwargs):
+        target = kwargs["target"]
+        item = kwargs["item"].title()
+        amount = int(kwargs["amount"])
+        
+        #Check target has enough funds
+        if target.db.currency-amount < 0:
+            self.execute_cmd(f"say Ah, actually. It doesn't look like you have enough money...")
+            return
+
+        #Deduct money from character
+        target.db.currency -= amount
+        target.msg(f"You pass some money to {self}")
+        target.location.msg_contents(f"{target} passes some money to {self}.",exclude=target)
+
         #Check hands
         if self.db.l_hand or self.db.r_hand:
             self.execute_cmd(f"fh")
 
-        target = kwargs["target"]
-        item = kwargs["item"].title()
         new = create_object("typeclasses.consumable."+item, key="new drink")
         new.reset_name()
         self.execute_cmd(f"emote whips up a {new} at the {self.db.link}.")

@@ -37,6 +37,8 @@ from commands.base.free import CmdFree
 from commands.base.lower import CmdLower
 from commands.base.pose import CmdPose
 from commands.base.emote import CmdEmote
+from commands.base.count import CmdCount
+from commands.base.pay import CmdPay
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
@@ -48,6 +50,7 @@ from commands.admin.dig import CmdDig
 from commands.admin.doorside import CmdDoorside
 from commands.admin.tunnel import _CmdTunnel
 from commands.admin.tunnel import CmdTunnel
+from commands.admin.givemoney import CmdGivemoney
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -100,6 +103,9 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdFree())
         self.add(CmdPose())
         self.add(CmdEmote())
+        self.add(CmdCount())
+        self.add(CmdGivemoney())
+        self.add(CmdPay())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
