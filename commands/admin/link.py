@@ -1,7 +1,7 @@
 from evennia.commands.command import Command as BaseCommand
 from evennia.utils.search import search_object
 from typeclasses.npc import Npc
-from typeclasses.furniture import Bar
+from typeclasses.bar import Bar
 
 class CmdLink(BaseCommand):
 
