@@ -50,7 +50,7 @@ class Room(DefaultRoom):
         for con in visible:
             key = con.get_display_name(looker)
             if con.destination:
-                exits.append(key)
+                exits.append("|u"+key+"|n")
             elif con.has_account or type(con) is Npc or type(con) is Character:
                 users.insert(0, con)
             else:
@@ -85,7 +85,7 @@ class Room(DefaultRoom):
                     else:
                         string += " There is a |w"+furniture_item.name+"|n "+furniture_item.db.position
         if exits:
-            string += "\n|wExits:|n " + list_to_string(exits)
+            string += " You can go " + list_to_string(exits)+"."
         if users or things:
             # handle pluralization of things (never pluralize users)
             thing_strings = []
@@ -97,10 +97,10 @@ class Room(DefaultRoom):
                     key = [item.get_numbered_name(nitem, looker, key=key)[1] for item in itemlist][
                         0
                     ]
-                thing_strings.append(key)
+                thing_strings.append("|Y"+key+"|n")
 
             if len(thing_strings) > 0:
-                string += "\n|wYou see:|n " + list_to_string(thing_strings)
+                string += "\nScattered about you see " + list_to_string(thing_strings)
 
             for user in users:
                 if users.index(user) == 0:
