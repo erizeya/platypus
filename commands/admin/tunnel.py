@@ -112,7 +112,7 @@ class CmdTunnel(COMMAND_DEFAULT_CLASS):
         telswitch = ""
         if "tel" in self.switches:
             telswitch = "/teleport"
-        doorswith = ""
+        doorswitch = ""
         if "door" in self.switches:
             doorswitch = "/door"
         backstring = ""
