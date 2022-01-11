@@ -10,6 +10,7 @@ creation commands.
 from evennia import DefaultCharacter
 from evennia.utils import make_iter
 from custom import genderize, cardinal_to_index, is_valid_cardinal, print_cardinal_list 
+from django.utils.translation import gettext as _
 
 class Character(DefaultCharacter):
     """
@@ -115,6 +116,69 @@ class Character(DefaultCharacter):
         elif not self.db.l_hand == None and not self.db.r_hand == None:
             text += genderize(f"%S has a {self.db.l_hand} in their left hand and a {self.db.r_hand} in their right hand.",self.db.gender)
         return text
+
+    def at_pre_puppet(self, account, session=None, **kwargs):
+        """
+        Return the character from storage in None location in `at_post_unpuppet`.
+        Args:
+            account (Account): This is the connecting account.
+            session (Session): Session controlling the connection.
+
+        """
+        self.db.look_place = self.db.prelogout_lp
+
+    def at_post_puppet(self, **kwargs):
+        """
+        Called just after puppeting has been completed and all
+        Account<->Object links have been established.
+
+        Args:
+            **kwargs (dict): Arbitrary, optional arguments for users
+                overriding the call (unused by default).
+        Note:
+            You can use `self.account` and `self.sessions.get()` to get
+            account and sessions at this point; the last entry in the
+            list from `self.sessions.get()` is the latest Session
+            puppeting this Object.
+
+        """
+        self.msg(_("\nYou become |c{name}|n.\n").format(name=self.key))
+        self.msg((self.at_look(self.location), {"type": "look"}), options=None)
+
+        def message(obj, from_obj):
+            obj.msg(_("{name} comes awake with a soft yawn.").format(name=self.get_display_name(obj)),
+                    from_obj=from_obj)
+
+        self.location.for_contents(message, exclude=[self], from_obj=self)
+
+    def at_post_unpuppet(self, account, session=None, **kwargs):
+        """
+        We stove away the character when the account goes ooc/logs off,
+        otherwise the character object will remain in the room also
+        after the account logged off ("headless", so to say).
+
+        Args:
+            account (Account): The account object that just disconnected
+                from this object.
+            session (Session): Session controlling the connection that
+                just disconnected.
+            **kwargs (dict): Arbitrary, optional arguments for users
+                overriding the call (unused by default).
+        """
+        if not self.sessions.count():
+            # only remove this char from grid if no sessions control it anymore.
+            if self.location:
+
+                def message(obj, from_obj):
+                    obj.msg(_("{name} suddenly falls asleep.").format(name=self.get_display_name(obj)),
+                            from_obj=from_obj)
+
+                self.location.for_contents(message, exclude=[self], from_obj=self)
+                self.db.prelogout_location = self.location
+                self.db.prelogout_lp = self.db.look_place
+                self.db.look_place = " is fast asleep."
+                #self.location = None
+
 
     def at_pre_say(self, message, **kwargs):
         """

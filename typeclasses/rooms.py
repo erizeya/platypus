@@ -7,6 +7,7 @@ Rooms are simple containers that has no location of their own.
 
 from evennia import DefaultRoom
 from typeclasses.npc import Npc
+from typeclasses.characters import Character
 from collections import defaultdict
 from evennia.utils.utils import (
     class_from_module,
@@ -50,7 +51,7 @@ class Room(DefaultRoom):
             key = con.get_display_name(looker)
             if con.destination:
                 exits.append(key)
-            elif con.has_account or type(con) is Npc:
+            elif con.has_account or type(con) is Npc or type(con) is Character:
                 users.insert(0, con)
             else:
                 #split out furniture
