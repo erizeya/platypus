@@ -41,6 +41,8 @@ class Exit(DefaultExit):
         self.db.see_thru = True
         self.db.desc = ""
         self.db.locked = False
+        self.db.pre_desc = ""
+        self.db.post_desc = ""
 
     def at_traverse(self, traveller, target_loc):
         if not self.db.open and self.db.open is False:

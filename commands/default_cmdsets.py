@@ -51,6 +51,7 @@ from commands.admin.doorside import CmdDoorside
 from commands.admin.tunnel import _CmdTunnel
 from commands.admin.tunnel import CmdTunnel
 from commands.admin.givemoney import CmdGivemoney
+from commands.admin.set import CmdSet
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -106,6 +107,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdCount())
         self.add(CmdGivemoney())
         self.add(CmdPay())
+        self.add(CmdSet())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """

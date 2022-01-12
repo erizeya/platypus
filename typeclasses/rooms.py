@@ -50,7 +50,13 @@ class Room(DefaultRoom):
         for con in visible:
             key = con.get_display_name(looker)
             if con.destination:
-                exits.append("|u"+key+"|n")
+                pre = ""
+                post = ""
+                if con.db.pre_desc:
+                    pre = con.db.pre_desc
+                if con.db.post_desc:
+                    post = con.db.post_desc
+                exits.append(pre+"|u"+key+"|n"+post)
             elif con.has_account or type(con) is Npc or type(con) is Character:
                 users.insert(0, con)
             else:
