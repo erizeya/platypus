@@ -186,7 +186,6 @@ class Character(DefaultCharacter):
                     self.db.prelogout_lp = self.db.look_place
                     self.db.look_place = " is fast asleep."
 
-
     def at_pre_say(self, message, **kwargs):
         """
         Before the object says something.
@@ -212,6 +211,12 @@ class Character(DefaultCharacter):
         """
         return message
 
+    def announce_move_from(self, destination, msg=None, mapping=None):
+        super().announce_move_from(destination, msg="{object} heads {exit}.")
+
+    def announce_move_to(self, source_location, msg=None, mapping=None):
+        super().announce_move_to(source_location, msg="{object} arrives from the {exit}.")
+        
     def at_say(
         self,
         message,
