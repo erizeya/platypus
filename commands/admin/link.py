@@ -1,6 +1,6 @@
 from evennia.commands.command import Command as BaseCommand
 from evennia.utils.search import search_object
-from typeclasses.npc import Npc
+from typeclasses.npcs.bartender import Bartender
 from typeclasses.bar import Bar
 
 class CmdLink(BaseCommand):
@@ -32,7 +32,7 @@ class CmdLink(BaseCommand):
             calle.msg(f"Could not locate bar {link}.")
             return
 
-        if not type(obj) is Npc:
+        if not type(obj) is Bartender:
             caller.msg(f"First argument must be an NPC\n{help_str}")
             return
 
