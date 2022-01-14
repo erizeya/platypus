@@ -7,6 +7,7 @@ for allowing Characters to traverse the exit to its destination.
 
 """
 from evennia import DefaultExit
+from evennia.utils import interactive
 
 
 class Exit(DefaultExit):
@@ -44,12 +45,17 @@ class Exit(DefaultExit):
         self.db.pre_desc = ""
         self.db.post_desc = ""
 
+    @interactive
     def at_traverse(self, traveller, target_loc):
         if not self.db.open and self.db.open is False:
             traveller.msg(f"{self} is closed.")
             return
         else:
-            super(Exit, self).at_traverse(traveller, target_loc)
+            traveller.msg(f"You head towards the {self}.")
+            traveller.ndb.moving = True
+            yield 3
+            if traveller.ndb.moving:
+                super(Exit, self).at_traverse(traveller, target_loc)
 
     def return_appearance(self, looker):
         #Exit name
@@ -60,7 +66,7 @@ class Exit(DefaultExit):
             text += "\n"+self.db.desc
 
         if(self.db.see_thru and self.db.open):
-            text += f"\n\nTo the door you see...\n"
+            text += f"\n\nTo the {self} you see...\n"
             text += self.destination.return_appearance(looker)
 
         return text

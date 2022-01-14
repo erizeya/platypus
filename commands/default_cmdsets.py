@@ -15,6 +15,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
+
 from commands.base.wear import CmdWear
 from commands.base.remove import CmdRemove
 from commands.base.inventory import CmdInventory
@@ -39,9 +40,12 @@ from commands.base.pose import CmdPose
 from commands.base.emote import CmdEmote
 from commands.base.count import CmdCount
 from commands.base.pay import CmdPay
+from commands.base.stop import CmdStop
+
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
+
 from commands.admin.pair import CmdPair
 from commands.admin.link import CmdLink
 from commands.admin.furniture import CmdFurniture
@@ -108,6 +112,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdGivemoney())
         self.add(CmdPay())
         self.add(CmdSet())
+        self.add(CmdStop())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
