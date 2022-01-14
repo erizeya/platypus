@@ -8,6 +8,7 @@ class Npc(Character):
 
     def at_object_creation(self):
         super().at_object_creation()
+        self.db.player = False
 
     def at_heard_say(self, message, from_obj):
         

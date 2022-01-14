@@ -72,6 +72,9 @@ class Character(DefaultCharacter):
         self.db.currency = 0
         self.db.bank = 0
 
+        "Meta attributes"
+        self.db.player = True
+
     def return_appearance(self, looker):
         # Display character name
         text = "|c%s|n\n" % self.get_display_name(looker)
@@ -125,7 +128,9 @@ class Character(DefaultCharacter):
             session (Session): Session controlling the connection.
 
         """
-        self.db.look_place = self.db.prelogout_lp
+        #Only set the LP of players
+        if self.db.player:
+            self.db.look_place = self.db.prelogout_lp
 
     def at_post_puppet(self, **kwargs):
         """
@@ -146,10 +151,12 @@ class Character(DefaultCharacter):
         self.msg((self.at_look(self.location), {"type": "look"}), options=None)
 
         def message(obj, from_obj):
-            obj.msg(_("{name} comes awake with a soft yawn.").format(name=self.get_display_name(obj)),
-                    from_obj=from_obj)
+                obj.msg(_("{name} comes awake with a soft yawn.").format(name=self.get_display_name(obj)),
+                        from_obj=from_obj)
 
-        self.location.for_contents(message, exclude=[self], from_obj=self)
+        #Annouce sleep only if it's a player character.
+        if self.db.player:
+            self.location.for_contents(message, exclude=[self], from_obj=self)
 
     def at_post_unpuppet(self, account, session=None, **kwargs):
         """
@@ -170,14 +177,14 @@ class Character(DefaultCharacter):
             if self.location:
 
                 def message(obj, from_obj):
-                    obj.msg(_("{name} suddenly falls asleep.").format(name=self.get_display_name(obj)),
+                    obj.msg(_("{name} falls asleep.").format(name=self.get_display_name(obj)),
                             from_obj=from_obj)
-
-                self.location.for_contents(message, exclude=[self], from_obj=self)
-                self.db.prelogout_location = self.location
-                self.db.prelogout_lp = self.db.look_place
-                self.db.look_place = " is fast asleep."
-                #self.location = None
+            
+                #Only annouce waking and mess with the LP of players
+                if self.db.player:
+                    self.location.for_contents(message, exclude=[self], from_obj=self)
+                    self.db.prelogout_lp = self.db.look_place
+                    self.db.look_place = " is fast asleep."
 
 
     def at_pre_say(self, message, **kwargs):
