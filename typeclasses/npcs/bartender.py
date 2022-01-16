@@ -10,7 +10,7 @@ class Bartender(Npc):
 
     def at_object_creation(self):
         super().at_object_creation()
-        self.db.link = None #NPCs are linked to bars
+        self.db.link = None #Bartenders are linked to bars
 
     def at_heard_say(self, message, from_obj):
         

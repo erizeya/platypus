@@ -225,7 +225,7 @@ class Character(DefaultCharacter):
         receivers=None,
         msg_receivers=None,
         target=None,
-        **kwargs,
+        **kwargs
     ):
         msg_type = "say"
         if kwargs.get("whisper", False):
