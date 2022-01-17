@@ -50,7 +50,7 @@ class CmdTunnel(COMMAND_DEFAULT_CLASS):
 
     key = "!tunnel"
     aliases = ["!tun"]
-    switch_options = ("oneway", "tel", "door")
+    switch_options = ("oneway", "tel", "door", "hotel")
     locks = "cmd: perm(tunnel) or perm(Builder)"
     help_category = "Building"
 
@@ -115,9 +115,13 @@ class CmdTunnel(COMMAND_DEFAULT_CLASS):
         doorswitch = ""
         if "door" in self.switches:
             doorswitch = "/door"
+        if "hotel" in self.switches:
+            doorswitch = "/hotel"
         backstring = ""
         if "oneway" not in self.switches:
             backstring = ", %s;%s" % (backname, backshort)
+        if "hotel" in self.switches:
+            backstring = ", out;o"
 
         # build the string we will use to call dig
         digstring = "!dig%s%s %s = %s;%s%s" % (telswitch, doorswitch, roomname, exitname, exitshort, backstring)

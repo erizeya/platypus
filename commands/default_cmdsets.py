@@ -57,7 +57,7 @@ from commands.admin.tunnel import _CmdTunnel
 from commands.admin.tunnel import CmdTunnel
 from commands.admin.givemoney import CmdGivemoney
 from commands.admin.set import CmdSet
-#from commands.admin.add_hotel_room import CmdAddHotelRoom
+from commands.admin.add_hotel_room import CmdAddHotelRoom
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -117,7 +117,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdSet())
         self.add(CmdStop())
         self.add(CmdRead())
-        #self.add(CmdAddHotelRoom())
+        self.add(CmdAddHotelRoom())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """

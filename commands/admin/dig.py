@@ -40,7 +40,7 @@ class CmdDig(ObjManipCommand):
     """
 
     key = "!dig"
-    switch_options = ("teleport","door")
+    switch_options = ("teleport","door","hotel")
     locks = "cmd:perm(dig) or perm(Builder)"
     help_category = "Building"
 
@@ -109,6 +109,9 @@ class CmdDig(ObjManipCommand):
                 typeclass = to_exit["option"]
                 if not typeclass:
                     typeclass = settings.BASE_EXIT_TYPECLASS
+                
+                if "hotel" in self.switches:
+                    typeclass = "typeclasses.exits.HotelDoor"
 
                 new_to_exit = create.create_object(
                     typeclass,
@@ -119,8 +122,6 @@ class CmdDig(ObjManipCommand):
                     destination=new_room,
                     report_to=caller,
                 )
-
-
 
                 alias_string = ""
                 if new_to_exit.aliases.all():
@@ -147,6 +148,8 @@ class CmdDig(ObjManipCommand):
                 typeclass = back_exit["option"]
                 if not typeclass:
                     typeclass = settings.BASE_EXIT_TYPECLASS
+                if "hotel" in self.switches:
+                    typeclass = "typeclasses.exits.HotelDoor"
                 new_back_exit = create.create_object(
                     typeclass,
                     back_exit["name"],
@@ -168,11 +171,12 @@ class CmdDig(ObjManipCommand):
                     alias_string,
                 )
         caller.msg("%s%s%s" % (room_string, exit_to_string, exit_back_string))
-        if "door" in self.switches:
+        if "door" in self.switches or "hotel" in self.switches:
             caller.msg("Linking doors")
-            new_to_exit.db.door = True 
+            new_to_exit.db.door = True
             new_back_exit.db.door = True
             new_to_exit.db.pair = new_back_exit
             new_back_exit.db.pair = new_to_exit
+            new_to_exit.db.front = True
         if new_room and "teleport" in self.switches:
             caller.move_to(new_room)

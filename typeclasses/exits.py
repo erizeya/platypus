@@ -8,6 +8,8 @@ for allowing Characters to traverse the exit to its destination.
 """
 from evennia import DefaultExit
 from evennia.utils import interactive
+import random
+import time
 
 
 class Exit(DefaultExit):
@@ -145,6 +147,68 @@ class LockingDoor(Exit):
                 self.db.programming = True
                 return
 
+        else:
+            self.location.msg_contents(f"The door buzzes angrily.")
+            return
+
+class HotelDoor(Exit):
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.code = 123456
+        self.db.front = False
+        self.db.expire = None
+        self.db.renter = None
+
+    def on_push(self, caller, args):
+        pair = self.db.pair
+        mode = "unlock"
+        
+        #Check if room is expired and scramble code if true.
+        if self.db.renter != None and self.db.expire < int(time.time()):
+            self.db.code = random.randint(11111,99999)
+            self.db.renter = None
+
+        #function: push lock on exit
+        if args == "lock":
+            #Check error conditions
+            if self.db.open:
+                self.location.msg_contents(f"The door beeps angrily and the \"door open\" light flashes three times.")
+                return
+            elif self.db.locked:
+                self.location.msg_contents(f"The door doesn't do anything. It must already be locked.")
+                return
+
+            #All checks pass, unlock the door
+            self.db.locked = True
+            pair.db.locked = True
+            self.location.msg_contents(f"The door beeps happily and a lock clicks into place.")
+            return
+
+        #function: push <code> on door
+        if args != "unlock":
+            try:
+                code = int(args)
+            except:
+                self.location.msg_contents(f"The door beeps angrily.")
+                return
+        else:
+            code = None
+
+        # Let users on the inside of the door "push open/unlock on out" but require code from outside.
+        if code == self.db.code or ((not self.db.front) and (args == "unlock" or args == "open")):
+            if mode == "unlock":
+                if self.db.locked:
+                    self.location.msg_contents(f"The door beeps happily and unlocks.")
+                    self.db.locked = False
+                    pair.db.locked = False
+                else:
+                    self.location.msg_contents(f"Nothing happens.")
+                return
+
+            elif mode == "program":
+                self.location.msg_contents(f"The door beeps happily and the \"programming\" light begins to blink.")
+                self.db.programming = True
+                return
         else:
             self.location.msg_contents(f"The door buzzes angrily.")
             return
