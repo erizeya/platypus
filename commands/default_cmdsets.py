@@ -41,6 +41,7 @@ from commands.base.emote import CmdEmote
 from commands.base.count import CmdCount
 from commands.base.pay import CmdPay
 from commands.base.stop import CmdStop
+from commands.base.read import CmdRead
 
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
@@ -56,6 +57,7 @@ from commands.admin.tunnel import _CmdTunnel
 from commands.admin.tunnel import CmdTunnel
 from commands.admin.givemoney import CmdGivemoney
 from commands.admin.set import CmdSet
+#from commands.admin.add_hotel_room import CmdAddHotelRoom
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -112,7 +114,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdGivemoney())
         self.add(CmdPay())
         self.add(CmdSet())
+        self.add(CmdSet())
         self.add(CmdStop())
+        self.add(CmdRead())
+        #self.add(CmdAddHotelRoom())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
