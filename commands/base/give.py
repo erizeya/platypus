@@ -43,8 +43,11 @@ class CmdGive(Command):
             held = "right"
 
         if not held:
-            caller.msg(f"You have to be holding the {item} to give it to somebody.")
-            return
+            if caller.db.r_hand == None or caller.db.l_hand == None:
+                caller.execute_cmd(f"hold {item}")
+            else:
+                caller.msg(f"You have to be holding the {item} to give it to somebody.")
+                return
 
         #Prep recipient
         target_recipient = arg_list[1]
@@ -60,6 +63,7 @@ class CmdGive(Command):
 
         if not dest_hand:
             caller.msg(f"{recipient}'s hands are full.")
+            recipient.msg(f"{caller} tried to give you something but your hands are full.")
             return
 
         # calling at_before_give hook method
