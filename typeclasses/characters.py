@@ -235,8 +235,8 @@ class Character(DefaultCharacter):
                 '{self} whisper to {all_receivers}, "|n{speech}|n"'
                 if msg_self is True else msg_self
             )
-            msg_receivers = msg_receivers or '{object} whispers: "|n{speech}|n"'
-            msg_location = msg_location or '{object} whispers to {all_receivers}'
+            msg_receivers = msg_receivers or '{object} whispers to you, "|n{speech}|n"'
+            msg_location = msg_location or '{object} whispers something to {all_receivers}.'
         if kwargs.get("to", False):
             msg_type = "to"
             msg_self = (
