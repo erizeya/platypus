@@ -57,7 +57,7 @@ class Room(DefaultRoom):
                 if con.db.post_desc:
                     post = con.db.post_desc
                 exits.append(pre+"|u"+key+"|n"+post)
-            elif con.has_account or type(con) is Npc or type(con) is Character:
+            elif type(con) is Character or type(con) is Npc or type(con).__bases__[0] is Npc:
                 users.insert(0, con)
             else:
                 #split out furniture
@@ -114,4 +114,3 @@ class Room(DefaultRoom):
                 string += f"|c{user}|n{user.db.look_place} "
 
         return string
-

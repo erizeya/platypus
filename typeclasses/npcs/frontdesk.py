@@ -19,8 +19,11 @@ class FrontDesk(Npc):
         self.db.convo_target = None #Track who I am talking to.
         self.db.convo_stage = 0 #Track what stage of a conversation I'm in.
         self.db.convo_expires = 0
-        self.db.price_per_day = 10
-        self.db.multiplyer = 60 #seconds to multiply requested duration by.
+
+        #Settable attributes
+        self.db.price_per_duration = 10
+        self.db.duration = 60 #seconds to multiply requested duration by.
+        self.db.duration_text = "minutes"
 
     def at_heard_say(self, message, from_obj):
         
@@ -28,6 +31,13 @@ class FrontDesk(Npc):
 
         res = ""
 
+        #Check if the convo partner is already renting
+        current = False
+        current_room = None
+        for room in self.db.rooms:
+            if room.db.renter == from_obj:
+                current = True
+                current_room = room
         #Check if we're already mid-convo with someone else
         if self.db.convo_target != None and from_obj != self.db.convo_target:
             res += "I'm sorry, I'm helping another customer. Please give me a moment."
@@ -37,8 +47,15 @@ class FrontDesk(Npc):
             if re.search(r"hi\b", message.lower()) or re.search(r"hey\b",message.lower()) or re.search(r"sup\b", message.lower()):
                 res += "Hello. "
 
+            if current and re.search(r"extend\b", message.lower()):
+                res += f"Of course. I'd be happy to extend your stay. How many {self.db.duration_text} would you like to extend your stay by?"
+                self.db.convo_stage = 1
+                self.db.convo_target = from_obj
+                self.db.convo_expires = int(time.time()) + 25
+            elif current:
+                res += "Welcome back. Are you enjoying your stay? Let me know if you would like to |uextend|n your stay."
             #Rent Response
-            if re.search(r"rent\b", message.lower()):
+            elif re.search(r"rent\b", message.lower()):
                 vacant = False
                 already_renting = False
                 for room in self.db.rooms:
@@ -50,7 +67,7 @@ class FrontDesk(Npc):
                 if already_renting:
                     res += f"Sorry, you already have a room here. We do not allow multiple registrations."
                 elif vacant:
-                    res += "Sure, I can help you with that. How many days would you like to rent a room for?"
+                    res += f"Sure, I can help you with that. How many {self.db.duration_text} would you like to rent a room for?"
                     self.db.convo_stage = 1
                     self.db.convo_target = from_obj
                     self.db.convo_expires = int(time.time()) + 25
@@ -59,7 +76,7 @@ class FrontDesk(Npc):
                     res += "Sorry, we don't have any vacancies right now. Please check back in a day or two."
             #Other Responses
             elif re.search(r"room\b", message.lower()):
-                res += "Are you looking for a room to spend the night? I can help you with that."
+                res += "Are you looking to |urent|n a room for the night? I can help you with that."
             elif re.search(r"vacant\b", message.lower()) or re.search(r"vacancies", message.lower()):
                 vacant = False
                 already_renting = False
@@ -71,7 +88,7 @@ class FrontDesk(Npc):
                 else:
                     res += "Sorry, I do not have any available rooms right now. Check back in a few hours, maybe?"
             else:
-                res += "Let me know if I can help you with anything."
+                res += "Let me know if I can help you with anything or if you'd like to |urent|n a room."
         #Player has been asked how long they want to rent for
         elif self.db.convo_stage == 1:
             #Parse how many days, up to seven.
@@ -100,28 +117,45 @@ class FrontDesk(Npc):
                 days_spelled = "seven"
             
             #Respond based on parsed response.
-            if days == 0:
-                res += "Sorry, I didn't catch that. How many days would you like to stay for? You can stay for up to seven days."
-            else:
-                if days == 1:
-                    res += f"Just one day? Alright. That'll run be {str(days*self.db.price_per_day)} money. Would you like me to book the room?"
+            if not current:
+                if days == 0:
+                    res += f"Sorry, I didn't catch that. How many {self.db.duration_text} would you like to stay for? You can stay for up to seven {self.db.duration_text}."
                 else:
-                    res += f"Great, {str(days_spelled)} days? We can do that. That will cost {str(days*self.db.price_per_day)} money. Would you like me to book the room?"
+                    if days == 1:
+                        res += f"Just one {self.db.duration_text[:-1]}? Alright. That'll run be {str(days*self.db.price_per_duration)} money. Would you like me to book the room?"
+                    else:
+                        res += f"Great, {str(days_spelled)} {self.db.duration_text}? We can do that. That will cost {str(days*self.db.price_per_duration)} money. Would you like me to book the room?"
 
-                self.db.convo_expires = int(time.time()) + 25
-                self.ndb.days = days
-                self.db.convo_stage = 2
+                    self.db.convo_expires = int(time.time()) + 25
+                    self.ndb.days = days
+                    self.db.convo_stage = 2
+            else:
+                if days == 0:
+                    res += f"Sorry, I didn't catch that. How many {self.db.duration_text} would you like to stay for? You can add up to seven {self.db.duration_text}."
+                else:
+                    if days == 1:
+                        res += f"One more {self.db.duration_text[:-1]}? Sure thing. That'll be {str(days*self.db.price_per_duration)} money. Is that alright?"
+                    else:
+                        res += f"Alright, {str(days_spelled)} more {self.db.duration_text}? No problem. That will cost {str(days*self.db.price_per_duration)} money. Should I extend your stay?"
+
+                    self.db.convo_expires = int(time.time()) + 25
+                    self.ndb.days = days
+                    self.db.convo_stage = 2
             
         #Player has indicated how long they want to rent for we're waiting to see if they confirm
         elif self.db.convo_stage == 2:
             intent = None 
             if re.search(r"yes\b|yeah\b|sure\b|ok\b", message.lower()):
-                res += "Great! I'll get the booking set up right now..."
-                vacant_rooms = []
-                for room in self.db.rooms:
-                    if room.db.renter is None:
-                        vacant_rooms.append(room)
-                delay(2, self.rent_room, renter=from_obj, door=random.choice(vacant_rooms))
+                if not current:
+                    res += "Great! I'll get the booking set up right now..."
+                    vacant_rooms = []
+                    for room in self.db.rooms:
+                        if room.db.renter is None:
+                            vacant_rooms.append(room)
+                    delay(2, self.rent_room, renter=from_obj, door=random.choice(vacant_rooms))
+                else:
+                    res += "Wonderful! I'll extend your booking right now..."
+                    delay(2, self.extend_room, renter=from_obj, door=current_room)
                 self.db.convo_target = None
                 self.db.convo_stage = 0
                 self.db.convo_expires = 0
@@ -153,10 +187,10 @@ class FrontDesk(Npc):
             delay(10, self.check_convo)
     
     def rent_room(self, renter=None, door=None, **kwags):
-        amount = self.ndb.days * self.db.price_per_day
+        amount = self.ndb.days * self.db.price_per_duration
         #Check renter has enough funds
         if renter.db.currency-amount < 0:
-            self.execute_cmd(f"say Ah, actually. It doesn't look like you have enough money...")
+            self.execute_cmd(f"say Sorry, it doesn't look like you have enough money to stay that long.")
             return
 
         #Deduct money from renter
@@ -170,7 +204,7 @@ class FrontDesk(Npc):
         #Setup the rental
         door.db.code = random.randint(11111,99999)
         door.db.renter = renter
-        door.db.expire = int(time.time())+(self.ndb.days*self.db.multiplyer)
+        door.db.expire = int(time.time())+(self.ndb.days*self.db.duration)
 
         #Create card with reservation details
         obj = create_object("typeclasses.readable.Readable",key="Hotel Zim Registration Card")
@@ -181,6 +215,22 @@ class FrontDesk(Npc):
         self.db.r_hand = obj
         self.execute_cmd(f"give Hotel Zim Registration Card to {renter}")
         self.execute_cmd(f"to {renter} That's everything. Enjoy your stay!")
+
+    def extend_room(self, renter=None, door=None, **kwags):
+        amount = self.ndb.days * self.db.price_per_duration
+        #Check renter has enough funds
+        if renter.db.currency-amount < 0:
+            self.execute_cmd(f"say Sorry, it doesn't look like you have enough money to stay that long.")
+            return
+
+        #Deduct money from renter
+        renter.db.currency -= amount
+        renter.msg(f"You pass {str(amount)} money to {self}")
+        renter.location.msg_contents(f"{renter} passes some money to {self}.",exclude=renter)
+
+        #Extend rental
+        self.execute_cmd("emote types a few things into a computer.")
+        door.db.expire = door.db.expire + (self.ndb.days*self.db.duration)
 
     def msg(self, text=None, from_obj=None, **kwargs):
         "Custom msg() method reacting to say."
