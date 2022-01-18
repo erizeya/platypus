@@ -27,7 +27,14 @@ class FrontDesk(Npc):
 
     def at_heard_say(self, message, from_obj):
         
+        #Clear expired rooms
         self.update_rooms()
+
+        #Delete leftover registration cards
+        self.execute_cmd("fh")
+        for item in self.contents:
+            if "Card" in item.key.split(" "):
+                item.delete()
 
         res = ""
 
@@ -52,6 +59,7 @@ class FrontDesk(Npc):
                 self.db.convo_stage = 1
                 self.db.convo_target = from_obj
                 self.db.convo_expires = int(time.time()) + 25
+                delay(30, self.check_convo)
             elif current:
                 res += "Welcome back. Are you enjoying your stay? Let me know if you would like to |uextend|n your stay."
             #Rent Response
@@ -169,9 +177,11 @@ class FrontDesk(Npc):
 
         return  res
 
-    def respond(self, **kwargs):
-        say = kwargs["say"]
-        self.execute_cmd(f"say {say}")
+    def respond(self, say = None, target = None, **kwargs):
+        if target:
+            self.execute_cmd(f"to {target} {say}")
+        else:
+            self.execute_cmd(f"say {say}")
 
     def check_convo(self, **kwargs):
         if self.db.convo_expires < int(time.time()):
@@ -198,7 +208,6 @@ class FrontDesk(Npc):
         renter.msg(f"You pass {str(amount)} money to {self}")
         renter.location.msg_contents(f"{renter} passes some money to {self}.",exclude=renter)
 
-        self.execute_cmd("fh")
         self.execute_cmd("emote types a few things into a computer.")
 
         #Setup the rental
@@ -214,6 +223,9 @@ class FrontDesk(Npc):
         obj.move_to(self, silent=True)
         self.db.r_hand = obj
         self.execute_cmd(f"give Hotel Zim Registration Card to {renter}")
+        if self.db.l_hand != None or self.db.r_hand != None:
+            self.execute_cmd(f"whisper {renter} Your room is {door.destination} and your code is {door.db.code}.")
+
         self.execute_cmd(f"to {renter} That's everything. Enjoy your stay!")
 
     def extend_room(self, renter=None, door=None, **kwags):
@@ -248,7 +260,7 @@ class FrontDesk(Npc):
                     response = self.at_heard_say(say_text, from_obj)
                     # If there is a response
                     if response != None:
-                        delay(1, self.respond, say=response)
+                        delay(1, self.respond, say=response, target=from_obj)
                     else:
                         delay(1, self.respond, say="Sorry, I couldn't hear you! [OOC: This is an error.]")
     
