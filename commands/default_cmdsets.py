@@ -42,6 +42,7 @@ from commands.base.count import CmdCount
 from commands.base.pay import CmdPay
 from commands.base.stop import CmdStop
 from commands.base.read import CmdRead
+from commands.base.whisper import CmdWhisper
 
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
@@ -74,6 +75,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         Populates the cmdset
         """
         super().at_cmdset_creation()
+        #
+        # Disable existing commands
+        #
+        self.remove(default_cmds.CmdWhisper())
         #
         # any commands you add below will overload the default ones.
         #
@@ -118,6 +123,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdStop())
         self.add(CmdRead())
         self.add(CmdAddHotelRoom())
+        self.add(CmdWhisper())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
