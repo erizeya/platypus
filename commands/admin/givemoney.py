@@ -2,12 +2,13 @@ from evennia import Command
 
 class CmdGivemoney(Command):
     """
-    Help File
+    Gives money to a player or NPC
+        Usage:
+            !givemoney <target> <amount>
     """
 
     key = "!givemoney"
-    #aliases = ("a1", "a2")
-    locks = "cmd:all()"
+    locks = "cmd:perm_above(Helper)"
     help_category = "Admin"
 
     def func (self):

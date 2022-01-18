@@ -4,7 +4,14 @@ from typeclasses.npcs.bartender import Bartender
 from typeclasses.bar import Bar
 
 class CmdLink(BaseCommand):
-
+    """
+    Links a bartender to a bar
+        Usage:
+            !link <NPC> <Bar>
+        
+        Notes:
+            <Bar> must be a dbref such as "#123"
+    """
     key = "!link"
     locks = "cmd:perm_above(Helper)"
     help_category = "Building"

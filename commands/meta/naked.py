@@ -10,11 +10,18 @@ from evennia.commands.command import Command as BaseCommand
 #
 class CmdNaked(BaseCommand):
     """
+    Show or set your characters nudity messages.
+
+    Usage:
+        @naked
+            Display your current naked messages.
+        @naked <body_part> = <description>
+            Will set the description of the selected body part.
     """
     key = "@naked"
     aliases = ["@nakeds"]
     lock = "cmd:all()"
-    help_category = "General"
+    help_category = "Meta"
 
 
     def func(self):

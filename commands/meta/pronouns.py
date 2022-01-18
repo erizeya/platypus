@@ -6,8 +6,20 @@ from evennia.commands.command import Command as BaseCommand
 #   @pronouns <pronoun number>
 #
 class CmdPronouns(BaseCommand):
+    """
+    Set your character's pronouns
+    
+    Usage:
+        @pronouns <pronoun group>
+    
+    Supported pronoun groups:
+        feminine
+        masuline
+        spivak
+    """
     key = "@pronouns"
     locks = "cmd:all()"
+    help_category = "Meta"
 
     def func(self):
         caller = self.caller

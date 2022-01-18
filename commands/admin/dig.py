@@ -2,18 +2,6 @@ from evennia.commands.default.building import ObjManipCommand
 from django.conf import settings
 from evennia.utils import create
 
-class _CmdDig(ObjManipCommand):
-    """
-    Deprecated. Please use !dig instead.
-    """
-
-    key = "@dig"
-    aliases = "dig"
-    help_category = "Deprecated"
-
-    def func(self):
-        self.caller.msg("Deprecated. Please use !dig instead.")
-
 class CmdDig(ObjManipCommand):
     """
     build new rooms and connect them to the current location

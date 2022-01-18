@@ -10,14 +10,18 @@ class CmdSet(Command):
         !set <target> <property> <value>
 
     Supported properties:
-        pre_desc
-        post_desc 
+        Exits:
+            pre_desc
+            post_desc
+        Hotel Front Desk NPC:
+            price_per_duration
+            duration
+            duration_text
     """
 
     key = "!set"
-    #aliases = ("a1", "a2")
-    locks = "cmd:all()"
-    help_category = "Admin"
+    locks = "cmd:perm_above(Helper)"
+    help_category = "Building"
 
     def func (self):
         caller = self.caller

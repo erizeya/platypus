@@ -51,10 +51,8 @@ from commands.meta.pronouns import CmdPronouns
 from commands.admin.pair import CmdPair
 from commands.admin.link import CmdLink
 from commands.admin.furniture import CmdFurniture
-from commands.admin.dig import _CmdDig
 from commands.admin.dig import CmdDig
 from commands.admin.doorside import CmdDoorside
-from commands.admin.tunnel import _CmdTunnel
 from commands.admin.tunnel import CmdTunnel
 from commands.admin.givemoney import CmdGivemoney
 from commands.admin.set import CmdSet
@@ -79,6 +77,8 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         # Disable existing commands
         #
         self.remove(default_cmds.CmdWhisper())
+        self.remove(default_cmds.CmdDig())
+        self.remove(default_cmds.CmdTunnel())
         #
         # any commands you add below will overload the default ones.
         #
@@ -107,9 +107,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdDrink())
         self.add(CmdFurniture())
         self.add(CmdPush())
-        self.add(_CmdDig())
         self.add(CmdDig())
-        self.add(_CmdTunnel())
         self.add(CmdTunnel())
         self.add(CmdDoorside())
         self.add(CmdFree())
