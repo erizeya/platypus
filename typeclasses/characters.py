@@ -34,6 +34,9 @@ class Character(DefaultCharacter):
     """
 
     def at_object_creation(self):
+        #OOC Data
+        self.db.ooc = "OOC Name"
+        
         #Gender and pronouns
         self.db.gender = 0
 

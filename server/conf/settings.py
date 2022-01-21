@@ -33,8 +33,35 @@ from evennia.settings_default import *
 
 # This is the name of your game. Make it catchy!
 SERVERNAME = "platypus"
-
-
+CMD_IGNORE_PREFIXES = "" #Prefixes matter
+PERMISSION_HIERARCHY = [
+    "Guest",  # note-only used if GUEST_ENABLED=True
+    "Player",
+    "Helper",
+    "Staff",
+    "Builder",
+    "Admin",
+    "Developer",
+]
+DEFAULT_CHANNELS = [
+    # public channel
+    {
+        "key": "Public",
+        "aliases": ("pub"),
+        "desc": "Public discussion",
+        "locks": "control:perm(Admin);listen:all();send:all()",
+    },
+    {
+        "key": "Newbie",
+        "desc": "Newbie help and support",
+        "locks": "control:perm(Admin);listen:all();send:all()",
+    },
+    {
+        "key": "Staff",
+        "desc": "Staff communication",
+        "locks": "control:perm(Admin);listen:perm(Staff);send:perm(Staff)",
+    }
+]
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
 ######################################################################

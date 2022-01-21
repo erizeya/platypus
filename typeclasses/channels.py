@@ -16,20 +16,20 @@ from evennia import DefaultChannel
 
 
 class Channel(DefaultChannel):
-    """
-    Working methods:
+        """
+        Working methods:
         at_channel_creation() - called once, when the channel is created
         has_connection(account) - check if the given account listens to this channel
         connect(account) - connect account to this channel
         disconnect(account) - disconnect account from channel
         access(access_obj, access_type='listen', default=False) - check the
-                    access on this channel (default access_type is listen)
+                        access on this channel (default access_type is listen)
         delete() - delete this channel
         message_transform(msg, emit=False, prefix=True,
-                          sender_strings=None, external=False) - called by
-                          the comm system and triggers the hooks below
+                                sender_strings=None, external=False) - called by
+                                the comm system and triggers the hooks below
         msg(msgobj, header=None, senders=None, sender_strings=None,
-            persistent=None, online=False, emit=False, external=False) - main
+                persistent=None, online=False, emit=False, external=False) - main
                 send method, builds and sends a new message to channel.
         tempmsg(msg, header=None, senders=None) - wrapper for sending non-persistent
                 messages.
@@ -37,9 +37,9 @@ class Channel(DefaultChannel):
                 connected accounts on channel, optionally sending only
                 to accounts that are currently online (optimized for very large sends)
 
-    Useful hooks:
+        Useful hooks:
         channel_prefix(msg, emit=False) - how the channel should be
-                  prefixed when returning to user. Returns a string
+                        prefixed when returning to user. Returns a string
         format_senders(senders) - should return how to display multiple
                 senders to a channel
         pose_transform(msg, sender_string) - should detect if the
@@ -57,6 +57,29 @@ class Channel(DefaultChannel):
         pre_send_message(msg) - runs just before a message is sent to channel
         post_send_message(msg) - called just after message was sent to channel
 
-    """
+        """
+        def format_message(self, msgobj, emit=False, **kwargs):
+                """
+                Hook method. Formats a message body for display.
+                Args:
+                msgobj (Msg or TempMsg): The message object to send.
+                emit (bool, optional): The message is agnostic of senders.
+                **kwargs (dict): Arbitrary, optional arguments for users
+                overriding the call (unused by default).
+                Returns:
+                transformed (str): The formatted message.
+                """
+                # We don't want to count things like external sources as senders for
+                # the purpose of constructing the message string.
+                senders = [sender for sender in msgobj.senders if hasattr(sender, "key")]
+                if not senders:
+                        emit = True
+                if emit:
+                        return msgobj.message
+                else:
+                        senders = [sender.db.ooc for sender in msgobj.senders]
+                        senders = ", ".join(senders)
+                        return self.pose_transform(msgobj, senders)
 
-    pass
+
+                pass

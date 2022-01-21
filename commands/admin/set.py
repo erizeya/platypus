@@ -1,6 +1,7 @@
 from evennia import Command
 from typeclasses.exits import Exit
 from typeclasses.npcs.frontdesk import FrontDesk
+from typeclasses.characters import Character
 
 class CmdSet(Command):
     """
@@ -17,6 +18,8 @@ class CmdSet(Command):
             price_per_duration
             duration
             duration_text
+        Players:
+            ooc_handle
     """
 
     key = "!set"
@@ -27,7 +30,7 @@ class CmdSet(Command):
         caller = self.caller
         args = self.args.strip()
         help_msg = "Usage: !set <target> <property> <value>\nSee help !set for more information."
-        supported_properties = ["pre_desc", "post_desc", "price_per_duration", "duration", "duration_text"]
+        supported_properties = ["pre_desc", "post_desc", "price_per_duration", "duration", "duration_text", "ooc_handle"]
 
         if not args:
             caller.msg(help_msg)
@@ -65,6 +68,10 @@ class CmdSet(Command):
             if prop in ["price_per_duration", "duration"] and not val.isnumeric():
                 caller.msg(f"Error: {prop} must be set with a numeric value")
                 return
+        elif prop in ["ooc_handle"]:
+            if not type(target) is Character:
+                caller.msg(f"Error: {prop} can only be set on characters.")
+                return
                 
         #Set the property
         if prop == "pre_desc":
@@ -87,6 +94,9 @@ class CmdSet(Command):
             target.db.duration_text = val
             caller.msg(f"Set: {prop} is now \"{target.db.duration_text}\".")
             return                               
+        elif prop == "ooc_handle":
+            target.db.ooc = val
+            caller.msg(f"Set: {prop} is now \"{target.db.ooc}\".")
         else:
             caller.msg(f"!set: error. target={target} prop={prop} value={val}")
             caller.msg(help_msg)

@@ -16,6 +16,8 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 
 from evennia import default_cmds
 
+from evennia import settings
+
 from commands.base.wear import CmdWear
 from commands.base.remove import CmdRemove
 from commands.base.inventory import CmdInventory
@@ -43,7 +45,9 @@ from commands.base.pay import CmdPay
 from commands.base.stop import CmdStop
 from commands.base.read import CmdRead
 from commands.base.whisper import CmdWhisper
+from commands.base.xhelp import CmdXhelp
 
+from commands.meta.comms import CmdJoin, CmdLeave, CmdChannels, CmdLocal
 from commands.meta.lp import CmdLp
 from commands.meta.naked import CmdNaked
 from commands.meta.pronouns import CmdPronouns
@@ -57,7 +61,8 @@ from commands.admin.tunnel import CmdTunnel
 from commands.admin.givemoney import CmdGivemoney
 from commands.admin.set import CmdSet
 from commands.admin.add_hotel_room import CmdAddHotelRoom
-
+from commands.admin.comms import CmdChannelCreate, CmdCBoot, CmdCdesc, CmdCdestroy, CmdCemit, CmdClock, CmdCWho, CmdDelCom
+from commands.admin.xreply import CmdXreply
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -122,6 +127,9 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdRead())
         self.add(CmdAddHotelRoom())
         self.add(CmdWhisper())
+        self.add(CmdXhelp())
+        self.add(CmdXreply())
+        self.add(CmdLocal())
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
@@ -141,6 +149,29 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
+        self.remove(default_cmds.CmdAddCom())
+        self.remove(default_cmds.CmdAllCom())
+        self.remove(default_cmds.CmdCBoot())
+        self.remove(default_cmds.CmdCdesc())
+        self.remove(default_cmds.CmdCdestroy())
+        self.remove(default_cmds.CmdCemit())
+        self.remove(default_cmds.CmdChannels())
+        self.remove(default_cmds.CmdClock())
+        self.remove(default_cmds.CmdCWho())
+        #
+        # Add
+        #
+        self.add(CmdJoin())
+        self.add(CmdLeave())
+        self.add(CmdChannelCreate())
+        self.add(CmdCBoot())
+        self.add(CmdCdesc())
+        self.add(CmdCdestroy())
+        self.add(CmdCemit())
+        self.add(CmdChannels())
+        self.add(CmdClock())
+        self.add(CmdCWho())
+        self.add(CmdDelCom())
 
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
