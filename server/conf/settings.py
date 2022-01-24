@@ -62,6 +62,14 @@ DEFAULT_CHANNELS = [
         "locks": "control:perm(Admin);listen:perm(Staff);send:perm(Staff)",
     }
 ]
+
+GLOBAL_SCRIPTS = {
+    "phone_number_manager": {
+        "typeclass": "typeclasses.scripts.PhoneNumberManager",
+        "desc": "Phone Manager",
+        "persistent": True
+    },
+}
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
 ######################################################################

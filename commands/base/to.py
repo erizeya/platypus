@@ -1,4 +1,5 @@
 from evennia import Command
+from custom import is_valid_cardinal
 
 class CmdTo(Command):
     """
@@ -12,30 +13,30 @@ class CmdTo(Command):
     locks = "cmd:all()"
 
     def func(self):
-        """Run the whisper command"""
-
         caller = self.caller
         args = self.args
-
         args_l = args.strip().split(" ")
-        lhs = args_l[0]
-        rhs = " ".join(args_l[1:])
+        target = args_l[0]
 
-        if not lhs or not rhs:
+        if is_valid_cardinal(target):
+            target = " ".join(args_l[:2])
+            speech = " ".join(args_l[2:])
+        else:
+            speech = " ".join(args_l[1:])
+
+        if not target or not speech:
             caller.msg("Usage: to <target> <message>")
             return
 
-        target = caller.search(lhs)
-        speech = rhs
+        target = caller.multiple_search(target, location=[caller, caller.location])
 
-        # If the speech is empty, abort the command
-        if not speech or not lhs:
+        if not target:
+            return
+        
+        if not target.location is caller.location and  not target == caller.db.l_hand and not target == caller.db.r_hand:
+            caller.msg("You can only direct speech to something you're holding or in the same room as you.")
             return
 
         # Call a hook to change the speech before whispering
         speech = caller.at_pre_say(speech, to=True)
-
-        # no need for self-message if we are whispering to ourselves (for some reason)
-        #msg_self = None if caller is lhs else True
-
         caller.at_say(speech, msg_self=True, receivers=target, to=True)

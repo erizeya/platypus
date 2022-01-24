@@ -16,6 +16,7 @@ from evennia import DefaultScript
 
 
 class Script(DefaultScript):
+  
     """
     A script type is customized by redefining some or all of its hook
     methods and variables.
@@ -90,3 +91,21 @@ class Script(DefaultScript):
     """
 
     pass
+
+import random
+class PhoneNumberManager(Script):
+    """
+    A global script for generating phone numbers
+    """
+    def at_script_creation(self):
+      self.key = "phone_manager"
+      self.desc = "Manages phone numbers"
+      self.persistent = True  # will survive reload
+      self.db.numbers = [5411234]
+      
+    def generate_number(self):
+      new_num = 5411234
+      while new_num in self.db.numbers:
+        new_num = int(str(541)+str(random.randint(1111, 9999)))
+      self.db.numbers.append(new_num)
+      return new_num

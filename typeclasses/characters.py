@@ -343,6 +343,11 @@ class Character(DefaultCharacter):
                 target_obj,
                 quiet=True,
             )
+        elif type(location) is list:
+            obj = []
+            for l in location:
+                obj.append(self.search(target_obj, location=l, quiet=True))
+            obj = obj[0] + obj[1]
         else:
             obj = self.search(
                 target_obj,

@@ -24,7 +24,14 @@ class CmdPush(Command):
         what = arg_list[0]
         target_obj = arg_list[1]
 
-        obj = caller.multiple_search(target_obj, location=caller.location)
+        obj = caller.multiple_search(target_obj, location=[caller.location, caller])
+        
+        if not obj:
+            return
+
+        if not obj.location is caller.location and not obj == caller.db.l_hand and not obj == caller.db.r_hand:
+            caller.msg("You can only push keys on something you're holding or in the same room as you.")
+            return
 
         if not obj:
             return
