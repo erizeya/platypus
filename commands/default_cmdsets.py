@@ -18,6 +18,9 @@ from evennia import default_cmds
 
 from evennia import settings
 
+from commands.command_override import CmdSetDesc, CmdAccess, CmdCharCreate, CmdCharDelete, CmdColorTest, CmdHelp, \
+                                      CmdIC, CmdOption, CmdPassword, CmdQuell, CmdQuit, CmdStyle, CmdWho
+
 from commands.base.wear import CmdWear
 from commands.base.remove import CmdRemove
 from commands.base.inventory import CmdInventory
@@ -84,6 +87,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.remove(default_cmds.CmdWhisper())
         self.remove(default_cmds.CmdDig())
         self.remove(default_cmds.CmdTunnel())
+        self.remove(default_cmds.CmdSessions())
+        self.remove(default_cmds.CmdNick())
+        self.remove(default_cmds.CmdOOC())
+
         #
         # any commands you add below will overload the default ones.
         #
@@ -130,7 +137,19 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdXhelp())
         self.add(CmdXreply())
         self.add(CmdLocal())
+        # 
+        # Simple overrides of built-ins
+        #
+        
 
+        self.remove(default_cmds.CmdHelp())
+        self.add(CmdHelp())
+        self.remove(default_cmds.CmdAccess())
+        self.add(CmdAccess())
+        self.remove(default_cmds.CmdSetDesc())
+        self.add(CmdSetDesc())
+
+        
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
     This is the cmdset available to the Account at all times. It is
@@ -150,6 +169,8 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         # any commands you add below will overload the default ones.
         #
         self.remove(default_cmds.CmdAddCom())
+        self.remove(default_cmds.CmdDelCom())
+        self.remove(default_cmds.CmdPage())
         self.remove(default_cmds.CmdAllCom())
         self.remove(default_cmds.CmdCBoot())
         self.remove(default_cmds.CmdCdesc())
@@ -158,6 +179,10 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         self.remove(default_cmds.CmdChannels())
         self.remove(default_cmds.CmdClock())
         self.remove(default_cmds.CmdCWho())
+        self.remove(default_cmds.CmdNick())
+        self.remove(default_cmds.CmdOOC())
+
+
         #
         # Add
         #
@@ -173,7 +198,26 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         self.add(CmdCWho())
         self.add(CmdDelCom())
 
-
+        self.remove(default_cmds.CmdCharCreate())
+        self.add(CmdCharCreate())
+        self.remove(default_cmds.CmdCharDelete())
+        self.add(CmdCharDelete())
+        self.remove(default_cmds.CmdColorTest())
+        self.add(CmdColorTest())
+        self.remove(default_cmds.CmdIC())
+        self.add(CmdIC())
+        self.remove(default_cmds.CmdOption())
+        self.add(CmdOption())
+        self.remove(default_cmds.CmdPassword())
+        self.add(CmdPassword())
+        self.remove(default_cmds.CmdQuell())
+        self.add(CmdQuell())
+        self.remove(default_cmds.CmdQuit())
+        self.add(CmdQuit())
+        self.remove(default_cmds.CmdStyle())
+        self.add(CmdStyle())
+        self.remove(default_cmds.CmdWho())
+        self.add(CmdWho())
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
     """
     Command set available to the Session before being logged in.  This
@@ -209,6 +253,8 @@ class SessionCmdSet(default_cmds.SessionCmdSet):
         It prints some info.
         """
         super().at_cmdset_creation()
+        self.remove(default_cmds.CmdSessions())
+
         #
         # any commands you add below will overload the default ones.
         #

@@ -7,7 +7,7 @@ class CmdXhelp(Command):
 
     key = "xhelp"
     locks = "cmd:all()"
-    help_category = "General"
+    help_category = "Help"
 
     def func (self):
         caller = self.caller
