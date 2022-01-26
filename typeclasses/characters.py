@@ -220,16 +220,7 @@ class Character(DefaultCharacter):
     def announce_move_to(self, source_location, msg=None, mapping=None):
         super().announce_move_to(source_location, msg="{object} arrives from the {exit}.")
         
-    def at_say(
-        self,
-        message,
-        msg_self=None,
-        msg_location=None,
-        receivers=None,
-        msg_receivers=None,
-        target=None,
-        **kwargs
-    ):
+    def at_say(self, message, msg_self=None, msg_location=None, receivers=None, msg_receivers=None, target=None, **kwargs):
         msg_type = "say"
         if kwargs.get("whisper", False):
             # whisper mode
