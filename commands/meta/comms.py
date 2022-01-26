@@ -17,7 +17,7 @@ class CmdJoin(Command):
     """
 
     key = "+join"
-    help_category = "Comms"
+    help_category = "Out-of-Character Comms"
     locks = "cmd:not pperm(channel_banned)"
 
     def func(self):
@@ -58,7 +58,7 @@ class CmdLeave(Command):
     """
 
     key = "+leave"
-    help_category = "Comms"
+    help_category = "Out-of-Character Comms"
     locks = "cmd:not pperm(channel_banned)"
 
     def func(self):
@@ -98,7 +98,7 @@ class CmdChannels(default_cmds.CmdChannels):
     """
     key = "+channels"
     aliases = ""
-    help_category = "Comms"
+    help_category = "Out-of-Character Comms"
     locks = "cmd:not pperm(channel_banned)"
 
     # this is used by the COMMAND_DEFAULT_CLASS parent
@@ -181,7 +181,7 @@ class CmdLocal(Command):
     """
     key = "+local"
     aliases = ""
-    help_category = "Comms"
+    help_category = "Out-of-Character Comms"
 
     def func(self):
         caller = self.caller
