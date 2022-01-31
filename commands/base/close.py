@@ -34,4 +34,6 @@ class CmdClose(Command):
             obj.db.pair.db.open = False
 
         caller.msg(f"You close the {obj}")
+        caller.location.msg_contents(f"{caller} closes the {obj}.",exclude=caller)
+        obj.db.pair.location.msg_contents(f"The {obj.db.pair} closes.")
         return

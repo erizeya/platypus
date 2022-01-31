@@ -41,5 +41,6 @@ class CmdOpen(Command):
 
         caller.msg(f"You open the {obj}")
         caller.location.msg_contents(f"{caller} opens the {obj}.",exclude=caller)
+        obj.db.pair.location.msg_contents(f"The {obj.db.pair} opens.")
         return
 
