@@ -11,7 +11,6 @@ from evennia import DefaultCharacter
 from evennia.utils import make_iter
 from custom import genderize, cardinal_to_index, is_valid_cardinal, print_cardinal_list 
 from django.utils.translation import gettext as _
-
 class Character(DefaultCharacter):
     """
     The Character defaults to reimplementing some of base Object's hook methods with the
@@ -74,6 +73,10 @@ class Character(DefaultCharacter):
         "Funds"
         self.db.currency = 0
         self.db.bank = 0
+
+        "Affiliations: Employment, gangs, etc"
+        self.db.employment = None
+        self.db.affiliations = []
 
         "Meta attributes"
         self.db.player = True
@@ -362,3 +365,6 @@ class Character(DefaultCharacter):
             return obj[count]
         else:
             return obj[0]
+
+    def remove_affiliation(self, target_affilition):
+        self.db.affiliations.remove(target_affilition)

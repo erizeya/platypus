@@ -9,9 +9,13 @@ class Bar(Furniture):
         self.db.container = True
         self.db.seating = False
         self.db.wares = {"Tea":50, "Rice":25}
-
+        self.db.affiliation = ""
+        
     def on_use(self, user):
-        evmenu.EvMenu(user, "typeclasses.bar", startnode="menunode_bar", cmd_on_exit=None, obj=self)
+        if self.db.affiliation in user.db.affiliations:
+            evmenu.EvMenu(user, "typeclasses.bar", startnode="menunode_bar", cmd_on_exit=None, obj=self)
+        else:
+            user.msg("You don't seem to have the keys nessecary to unlock the bar.")
 
 def menunode_bar(caller, raw_string):
     #Generate menu

@@ -8,9 +8,11 @@ for allowing Characters to traverse the exit to its destination.
 """
 from evennia import DefaultExit
 from evennia.utils import interactive
+from evennia.utils import delay
 import random
 import time
 
+#TODO: Verify door is still open when moving through it.
 
 class Exit(DefaultExit):
     """
@@ -79,6 +81,8 @@ class LockingDoor(Exit):
         self.db.code = 1234
         self.db.programming = False
         self.db.front = False
+        self.db.door = True
+
 
     def on_push(self, caller, args):
         pair = self.db.pair
@@ -158,6 +162,7 @@ class HotelDoor(Exit):
         self.db.front = False
         self.db.expire = None
         self.db.renter = None
+        self.db.door = True
 
     def on_push(self, caller, args):
         pair = self.db.pair
@@ -212,3 +217,62 @@ class HotelDoor(Exit):
         else:
             self.location.msg_contents(f"The door buzzes angrily.")
             return
+
+class AffiliatedDoor(Exit):
+    
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.affiliation = ""
+        self.db.front = False
+        self.db.door = True
+
+ 
+    def on_push(self, caller, args):
+        pair = self.db.pair
+
+        #function: push lock on exit
+        if args == "lock":
+            #Check error conditions
+            if self.db.open:
+                self.location.msg_contents(f"The {self} beeps angrily and the \"door open\" light flashes three times.")
+                return
+            elif self.db.locked:
+                self.location.msg_contents(f"The {self} doesn't do anything. It must already be locked.")
+                return
+
+            #All checks pass, unlock the door
+            self.db.locked = True
+            pair.db.locked = True
+            self.location.msg_contents(f"The {self} beeps happily and a lock clicks into place.")
+            pair.location.msg_contents(f"The sound a lock clicking into place comes from {pair}.")
+            return
+
+        #function: push unlock on door
+        elif args == "unlock":
+            if self.db.affiliation in caller.db.affiliations:
+                    delay(20, self.close_and_lock, caller)
+                    self.location.msg_contents(f"The {self} beeps happily and unlocks.")
+                    pair.location.msg_contents(f"The {pair} beeps happily and unlocks.")
+                    self.db.locked = False
+                    pair.db.locked = False
+            else:
+                    self.location.msg_contents(f"The {self} buzzes angrily and the \"unauthorized\" light blinks.")
+                    pair.location.msg_contents(f"The {pair} buzzes angrily and the \"unauthorized\" light blinks.")
+        else:
+            self.location.msg_contents(f"Nothing happens.")
+            return
+    
+    def close_and_lock(self, caller):
+        pair = self.db.pair
+        if self.db.open and not self.db.locked:
+            self.db.open = False
+            pair.db.open = False
+            self.db.locked = True
+            pair.db.locked = True
+            self.location.msg_contents(f"The {self} closes automatically and locks.")
+            pair.location.msg_contents(f"The {pair} closes automatically and locks.")
+        elif not self.db.locked:
+            self.db.locked = True
+            pair.db.locked = True
+            self.location.msg_contents(f"The {self} beeps as it automatically locks.")
+            pair.location.msg_contents(f"The sound a lock clicking into place comes from {pair}.")
