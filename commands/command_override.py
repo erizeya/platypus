@@ -50,9 +50,10 @@ class CmdPassword(default_cmds.CmdPassword):
 
 class CmdQuell(default_cmds.CmdQuell):
     key = "!quell"
-    aliases = ""
+    aliases = "unquell"
     help_category = "Admin"
-    locks = "cmd:perm(Staff);"
+    locks = "cmd:pperm(Staff)"
+    auto_help = False
 
 class CmdQuit(default_cmds.CmdQuit):
     key = "$quit"
